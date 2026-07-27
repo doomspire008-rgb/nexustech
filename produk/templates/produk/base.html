@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}NexusTech{% endblock %}</title>
+    {% load static %}
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; transition: background 0.3s, color 0.3s, border-color 0.3s; }
+
+        [data-theme="dark"] {
+            --bg-main: #0a0e1a;
+            --bg-card: #121a2e;
+            --bg-card2: #1a2540;
+            --border: #253558;
+            --border2: #34497a;
+            --accent: #4d8dff;
+            --accent-hover: #75a5ff;
+            --accent2: #ffb443;
+            --accent2-hover: #ffc670;
+            --gradient-brand: linear-gradient(135deg, #4d8dff 0%, #ffb443 100%);
+            --text-primary: #eef1f8;
+            --text-secondary: #9aa6c3;
+            --text-muted: #5f6b8a;
+            --navbar-bg: #0d1425;
+            --footer-bg: #0d1425;
+            --screen-bg: #182543;
+        }
+
+        [data-theme="light"] {
+            --bg-main: #f6f8ff;
+            --bg-card: #ffffff;
+            --bg-card2: #eef3ff;
+            --border: #d7e0f7;
+            --border2: #b9c8f2;
+            --accent: #2f6fed;
+            --accent-hover: #1d54c4;
+            --accent2: #f59e0b;
+            --accent2-hover: #d97f06;
+            --gradient-brand: linear-gradient(135deg, #2f6fed 0%, #f59e0b 100%);
+            --text-primary: #101828;
+            --text-secondary: #475467;
+            --text-muted: #98a2b3;
+            --navbar-bg: #ffffff;
+            --footer-bg: #eef3ff;
+            --screen-bg: #dbe6ff;
+        }
+
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg-main); color: var(--text-primary); min-height: 100vh; }
+
+        .navbar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 16px 40px; background: var(--navbar-bg);
+            border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100;
+            box-shadow: 0 1px 10px rgba(0,0,0,0.1);
+        }
+        .nav-logo { font-size: 22px; font-weight: 700; letter-spacing: 3px; color: var(--accent); text-decoration: none; }
+        .nav-logo span { color: var(--text-primary); }
+        .nav-links { display: flex; gap: 28px; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 14px; letter-spacing: 1px; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--accent); }
+        .nav-right { display: flex; gap: 12px; align-items: center; }
+        .btn-cart { background: transparent; color: var(--accent); border: 1px solid var(--accent); padding: 8px 18px; border-radius: 6px; font-size: 13px; cursor: pointer; text-decoration: none; transition: all 0.2s; }
+        .btn-cart:hover { background: var(--accent); color: #fff; }
+
+        .theme-toggle { background: var(--bg-card2); border: 1px solid var(--border); border-radius: 20px; padding: 6px 12px; cursor: pointer; font-size: 16px; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+        .theme-toggle:hover { border-color: var(--accent); }
+        .theme-label { font-size: 11px; color: var(--text-secondary); letter-spacing: 1px; }
+
+        .btn-primary { background: var(--gradient-brand); color: #fff; border: none; padding: 12px 28px; border-radius: 6px; font-size: 14px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-block; transition: all 0.2s; letter-spacing: 1px; box-shadow: 0 4px 14px rgba(77,141,255,0.25); }
+        .btn-primary:hover { filter: brightness(1.08); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(77,141,255,0.35); }
+        .btn-outline { background: transparent; color: var(--accent); border: 1px solid var(--accent); padding: 12px 28px; border-radius: 6px; font-size: 14px; cursor: pointer; text-decoration: none; display: inline-block; transition: all 0.2s; letter-spacing: 1px; }
+        .btn-outline:hover { background: var(--accent); color: #fff; }
+
+        footer { background: var(--footer-bg); border-top: 1px solid var(--border); padding: 40px; margin-top: 60px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+        .footer-brand { font-size: 20px; font-weight: 700; letter-spacing: 3px; color: var(--accent); margin-bottom: 12px; }
+        .footer-brand span { color: var(--text-primary); }
+        .footer-desc { font-size: 13px; color: var(--text-muted); line-height: 1.8; }
+        .footer-title { font-size: 11px; letter-spacing: 2px; color: var(--accent); margin-bottom: 16px; text-transform: uppercase; }
+        .footer-links { display: flex; flex-direction: column; gap: 10px; }
+        .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 13px; transition: color 0.2s; }
+        .footer-links a:hover { color: var(--accent); }
+        .footer-social { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+        .footer-social a { color: var(--text-muted); text-decoration: none; font-size: 13px; border: 1px solid var(--border); padding: 6px 14px; border-radius: 6px; transition: all 0.2s; }
+        .footer-social a:hover { color: var(--accent); border-color: var(--accent); }
+        .footer-bottom { border-top: 1px solid var(--border); padding: 20px 40px; text-align: center; font-size: 12px; color: var(--text-muted); background: var(--footer-bg); }
+
+        .messages { padding: 12px 40px; }
+        .message { padding: 12px 20px; border-radius: 6px; margin-bottom: 8px; font-size: 14px; }
+        .message.success { background: var(--bg-card2); border: 1px solid var(--border); color: var(--accent); }
+        .message.error { background: #fef2f2; border: 1px solid #fca5a5; color: #dc2626; }
+
+        /* ===== Chatbot Widget ===== */
+        #chatbot-toggle {
+            position: fixed; bottom: 24px; right: 24px; z-index: 999;
+            width: 58px; height: 58px; border-radius: 50%;
+            background: var(--gradient-brand); color: #fff; border: none;
+            font-size: 26px; cursor: pointer; box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+            display: flex; align-items: center; justify-content: center;
+        }
+        #chatbot-toggle:hover { filter: brightness(1.08); transform: scale(1.05); }
+
+        #chatbot-panel {
+            position: fixed; bottom: 94px; right: 24px; z-index: 999;
+            width: 340px; max-width: calc(100vw - 32px); height: 460px; max-height: calc(100vh - 140px);
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px;
+            display: none; flex-direction: column; overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        #chatbot-panel.open { display: flex; }
+        .cb-header {
+            background: var(--gradient-brand); color: #fff; padding: 14px 16px;
+            font-weight: 700; font-size: 14px; letter-spacing: 0.5px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .cb-header small { display: block; font-weight: 400; font-size: 11px; opacity: 0.9; margin-top: 2px; }
+        .cb-close { background: none; border: none; color: #fff; font-size: 18px; cursor: pointer; }
+        .cb-body { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+        .cb-bubble { max-width: 88%; padding: 9px 13px; border-radius: 10px; font-size: 13px; line-height: 1.5; white-space: pre-wrap; word-wrap: break-word; }
+        .cb-bubble.user { align-self: flex-end; background: var(--accent); color: #fff; border-bottom-right-radius: 2px; }
+        .cb-bubble.bot { align-self: flex-start; background: var(--bg-card2); color: var(--text-primary); border: 1px solid var(--border); border-bottom-left-radius: 2px; }
+        .cb-bubble.error { align-self: center; background: #fef2f2; color: #dc2626; border: 1px solid #fca5a5; font-size: 12px; }
+        .cb-typing { align-self: flex-start; font-size: 12px; color: var(--text-secondary); font-style: italic; }
+
+        .cb-produk-card {
+            display: flex; gap: 10px; align-self: flex-start; max-width: 92%;
+            background: var(--bg-card2); border: 1px solid var(--border); border-radius: 8px;
+            padding: 8px; text-decoration: none; color: var(--text-primary);
+        }
+        .cb-produk-card img { width: 46px; height: 46px; object-fit: cover; border-radius: 6px; background: var(--screen-bg); flex-shrink: 0; }
+        .cb-produk-card .cb-pnama { font-size: 12px; font-weight: 700; }
+        .cb-produk-card .cb-pmerek { font-size: 11px; color: var(--text-secondary); }
+        .cb-produk-card .cb-pharga { font-size: 12px; color: var(--accent); font-weight: 700; margin-top: 2px; }
+
+        .cb-footer { border-top: 1px solid var(--border); padding: 10px; display: flex; gap: 8px; }
+        .cb-footer input {
+            flex: 1; border: 1px solid var(--border); border-radius: 20px; padding: 9px 14px;
+            font-size: 13px; background: var(--bg-main); color: var(--text-primary); outline: none;
+        }
+        .cb-footer input:focus { border-color: var(--accent); }
+        .cb-footer button {
+            background: var(--accent); color: #fff; border: none; border-radius: 50%;
+            width: 38px; height: 38px; cursor: pointer; font-size: 15px; flex-shrink: 0;
+        }
+        .cb-footer button:hover { background: var(--accent-hover); }
+        .cb-footer button:disabled { opacity: 0.6; cursor: not-allowed; }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="nav-logo">NEXUS<span>TECH</span></a>
+        <div class="nav-links">
+            <a href="/">Beranda</a>
+            <a href="/produk/">Produk</a>
+            <a href="/produk/?kategori=gaming">Gaming</a>
+            <a href="/produk/?kategori=bisnis">Bisnis</a>
+            <a href="/produk/?kategori=ultrabook">Ultrabook</a>
+        </div>
+        <div class="nav-right">
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">
+                <span id="themeIcon">☀️</span>
+                <span class="theme-label" id="themeLabel">LIGHT</span>
+            </button>
+            <a href="/keranjang/" class="btn-cart">🛒 Keranjang</a>
+        </div>
+    </nav>
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+
+    <footer>
+        <div>
+            <div class="footer-brand">NEXUS<span>TECH</span></div>
+            <div class="footer-desc">Toko laptop terpercaya dengan koleksi terlengkap untuk gaming, bisnis, dan kreativitas.</div>
+            <div class="footer-social">
+                <a href="https://www.instagram.com/delvin956/" target="_blank">📸 Instagram</a>
+                <a href="https://www.facebook.com/delvin.lai" target="_blank">👤 Facebook</a>
+                <a href="https://wa.me/6281299779053" target="_blank">💬 WhatsApp</a>
+            </div>
+        </div>
+        <div>
+            <div class="footer-title">Navigasi</div>
+            <div class="footer-links">
+                <a href="/">Beranda</a>
+                <a href="/produk/">Semua Produk</a>
+                <a href="/produk/?kategori=gaming">Gaming</a>
+                <a href="/produk/?kategori=bisnis">Bisnis</a>
+            </div>
+        </div>
+        <div>
+            <div class="footer-title">Kontak</div>
+            <div class="footer-links">
+                <a href="https://wa.me/6281299779053" target="_blank">💬 +62 812-9977-9053</a>
+                <a href="https://www.instagram.com/delvin956/" target="_blank">📸 @delvin956</a>
+                <a href="https://www.facebook.com/delvin.lai" target="_blank">👤 Delvin Lai</a>
+                <a href="https://maps.app.goo.gl/QWcNFoEvd96aq9QN9" target="_blank">📍 Semarang, Jawa Tengah</a>
+            </div>
+        </div>
+    </footer>
+    <div class="footer-bottom">© 2026 NexusTech. All rights reserved.</div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 700, once: true, offset: 80, easing: 'ease-out-cubic' });
+
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        updateToggleBtn(savedTheme);
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            updateToggleBtn(next);
+        }
+
+        function updateToggleBtn(theme) {
+            const icon = document.getElementById('themeIcon');
+            const label = document.getElementById('themeLabel');
+            if (!icon || !label) return;
+            if (theme === 'dark') { icon.textContent = '☀️'; label.textContent = 'LIGHT'; }
+            else { icon.textContent = '🌙'; label.textContent = 'DARK'; }
+        }
+    </script>
+    <!-- Chatbot Widget -->
+    <button id="chatbot-toggle" onclick="cbToggle()" aria-label="Buka asisten rekomendasi laptop">💬</button>
+    <div id="chatbot-panel">
+        <div class="cb-header">
+            <div>🤖 Asisten NexusTech<small>Tanya rekomendasi laptop di sini</small></div>
+            <button class="cb-close" id="cb-reset" title="Hapus riwayat chat" style="margin-right:6px;">🗑️</button>
+            <button class="cb-close" onclick="cbToggle()">✕</button>
+        </div>
+        <div class="cb-body" id="cb-body">
+        </div>
+        <form class="cb-footer" id="cb-form">
+            {% csrf_token %}
+            <input type="text" id="cb-input" placeholder="Contoh: laptop editing video budget 15 juta" autocomplete="off" maxlength="1000">
+            <button type="submit" id="cb-send">➤</button>
+        </form>
+    </div>
+
+    <script>
+        // Kunci penyimpanan di browser (localStorage) supaya chat tidak hilang
+        // saat pindah halaman atau browser ditutup. Beda dengan variabel biasa
+        // yang hanya hidup selama tab masih terbuka, localStorage tetap ada
+        // sampai user sendiri yang menghapusnya (atau kita hapus lewat tombol reset).
+        const CB_STORAGE_KEY = 'nexustech_chat_history_v1';
+        const CB_MAX_STORED = 40; // batasi biar localStorage tidak membengkak
+        const CB_GREETING = 'Halo! 👋 Cerita dong laptop kayak apa yang kamu cari — buat apa, dan budgetnya berapa?';
+
+        let cbMessages = []; // {role: 'user'|'assistant', content, produk?}
+        let cbLoading = false;
+
+        function cbSaveHistory() {
+            try {
+                localStorage.setItem(CB_STORAGE_KEY, JSON.stringify(cbMessages.slice(-CB_MAX_STORED)));
+            } catch (e) {
+                // localStorage penuh atau diblokir browser (mis. mode private) -> abaikan saja
+            }
+        }
+
+        function cbLoadHistory() {
+            try {
+                const raw = localStorage.getItem(CB_STORAGE_KEY);
+                if (!raw) return null;
+                const parsed = JSON.parse(raw);
+                return Array.isArray(parsed) && parsed.length ? parsed : null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function cbToggle() {
+            document.getElementById('chatbot-panel').classList.toggle('open');
+        }
+
+        function cbEscapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function cbAddBubble(text, cls) {
+            const body = document.getElementById('cb-body');
+            const bubble = document.createElement('div');
+            bubble.className = 'cb-bubble ' + cls;
+            bubble.innerHTML = cbEscapeHtml(text);
+            body.appendChild(bubble);
+            body.scrollTop = body.scrollHeight;
+            return bubble;
+        }
+
+        function cbAddProdukCards(produkList) {
+            const body = document.getElementById('cb-body');
+            produkList.forEach(p => {
+                const a = document.createElement('a');
+                a.href = p.url;
+                a.className = 'cb-produk-card';
+                a.innerHTML = `
+                    <img src="${cbEscapeHtml(p.gambar_url || '')}" onerror="this.style.visibility='hidden'" alt="">
+                    <div>
+                        <div class="cb-pnama">${cbEscapeHtml(p.nama)}</div>
+                        <div class="cb-pmerek">${cbEscapeHtml(p.merek)}</div>
+                        <div class="cb-pharga">${cbEscapeHtml(p.harga)}</div>
+                    </div>`;
+                body.appendChild(a);
+            });
+            body.scrollTop = body.scrollHeight;
+        }
+
+        function cbRenderStoredMessage(msg) {
+            cbAddBubble(msg.content, msg.role === 'user' ? 'user' : 'bot');
+            if (msg.role === 'assistant' && msg.produk && msg.produk.length) {
+                cbAddProdukCards(msg.produk);
+            }
+        }
+
+        // Muat riwayat chat saat halaman dibuka. Kalau ada riwayat tersimpan,
+        // tampilkan itu. Kalau tidak ada (pertama kali buka), tampilkan sapaan default.
+        (function cbInit() {
+            const body = document.getElementById('cb-body');
+            const stored = cbLoadHistory();
+            if (stored) {
+                body.innerHTML = '';
+                cbMessages = stored;
+                cbMessages.forEach(cbRenderStoredMessage);
+            } else {
+                cbMessages = [{ role: 'assistant', content: CB_GREETING }];
+                cbSaveHistory();
+            }
+        })();
+
+        document.getElementById('cb-reset').addEventListener('click', function () {
+            if (!confirm('Hapus semua riwayat percakapan dengan asisten?')) return;
+            localStorage.removeItem(CB_STORAGE_KEY);
+            document.getElementById('cb-body').innerHTML = '';
+            cbMessages = [{ role: 'assistant', content: CB_GREETING }];
+            cbRenderStoredMessage(cbMessages[0]);
+            cbSaveHistory();
+        });
+
+        document.getElementById('cb-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            if (cbLoading) return;
+
+            const input = document.getElementById('cb-input');
+            const pesan = input.value.trim();
+            if (!pesan) return;
+
+            cbAddBubble(pesan, 'user');
+            cbMessages.push({ role: 'user', content: pesan });
+            cbSaveHistory();
+            input.value = '';
+
+            cbLoading = true;
+            document.getElementById('cb-send').disabled = true;
+            const typing = document.createElement('div');
+            typing.className = 'cb-typing';
+            typing.textContent = 'Asisten sedang mengetik...';
+            document.getElementById('cb-body').appendChild(typing);
+            document.getElementById('cb-body').scrollTop = document.getElementById('cb-body').scrollHeight;
+
+            try {
+                const csrfToken = document.querySelector('#cb-form [name=csrfmiddlewaretoken]').value;
+                const historyToSend = cbMessages.map(m => ({ role: m.role, content: m.content }));
+                const res = await fetch("{% url 'chatbot_api' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken,
+                    },
+                    body: JSON.stringify({ message: pesan, history: historyToSend }),
+                });
+                const data = await res.json();
+                typing.remove();
+
+                if (data.error) {
+                    cbAddBubble(data.error, 'error');
+                } else {
+                    cbAddBubble(data.reply, 'bot');
+                    const newMsg = { role: 'assistant', content: data.reply };
+                    if (data.produk && data.produk.length) {
+                        cbAddProdukCards(data.produk);
+                        newMsg.produk = data.produk;
+                    }
+                    cbMessages.push(newMsg);
+                    cbSaveHistory();
+                }
+            } catch (err) {
+                typing.remove();
+                cbAddBubble('Maaf, terjadi masalah koneksi ke asisten. Coba lagi ya.', 'error');
+            } finally {
+                cbLoading = false;
+                document.getElementById('cb-send').disabled = false;
+            }
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

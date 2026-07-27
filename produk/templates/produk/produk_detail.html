@@ -1,0 +1,526 @@
+{% extends 'produk/base.html' %}
+{% load static %}
+
+{% block title %}{{ produk.nama }} — NexusTech{% endblock %}
+
+{% block extra_css %}
+<style>
+    .breadcrumb { padding: 16px 40px; font-size: 12px; color: var(--text-secondary); border-bottom: 1px solid var(--border); background: var(--bg-card); }
+    .breadcrumb a { color: var(--accent); text-decoration: none; font-weight: 600; }
+    .breadcrumb span { margin: 0 8px; color: var(--text-muted); }
+
+    .detail { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; padding: 48px 40px; }
+
+    .product-visual { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 320px; position: relative; overflow: hidden; padding: 20px; gap: 16px; }
+    .product-visual img { width: 100%; max-height: 280px; object-fit: contain; }
+    .product-visual-badge { position: absolute; top: 16px; left: 16px; font-size: 10px; padding: 5px 12px; border-radius: 4px; background: var(--gradient-brand); color: #fff; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; }
+    .laptop-big { width: 160px; }
+    .laptop-screen-big { width: 160px; height: 100px; background: var(--border); border-radius: 6px 6px 0 0; border: 3px solid var(--border2); display: flex; align-items: center; justify-content: center; }
+    .laptop-screen-inner-big { width: 130px; height: 76px; background: var(--screen-bg); border-radius: 2px; }
+    .laptop-base-big { width: 180px; height: 12px; background: var(--border); border-radius: 0 0 6px 6px; margin-left: -10px; border: 2px solid var(--border2); }
+    .btn-keranjang-visual { width: 100%; padding: 12px; background: var(--accent); color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .btn-keranjang-visual:hover { background: var(--accent-hover); }
+
+    /* SHARE BUTTONS */
+    .share-bar { display: flex; gap: 8px; width: 100%; }
+    .btn-share { flex: 1; padding: 8px; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--text-secondary); font-size: 12px; cursor: pointer; transition: all 0.2s; font-weight: 600; }
+    .btn-share:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-share.wa { border-color: #25d366; color: #25d366; }
+    .btn-share.wa:hover { background: #25d366; color: #fff; }
+
+    .product-info { display: flex; flex-direction: column; gap: 20px; }
+    .product-brand-big { font-size: 11px; color: var(--accent); letter-spacing: 4px; text-transform: uppercase; font-weight: 700; }
+    .product-name-big { font-size: 32px; font-weight: 700; line-height: 1.2; color: var(--text-primary); }
+    .product-sku { font-size: 12px; color: var(--text-muted); }
+    .product-price-big { font-size: 36px; font-weight: 700; color: var(--accent); }
+    .price-discount { font-size: 18px; color: var(--text-muted); text-decoration: line-through; margin-right: 12px; }
+    .product-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.8; }
+
+    .rating-mini { display: flex; align-items: center; gap: 8px; }
+    .stars-mini { color: #f59e0b; font-size: 16px; }
+    .rating-num { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+    .rating-count { font-size: 13px; color: var(--text-secondary); }
+
+    /* STOK BADGE */
+    .stok-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+    .stok-badge.tersedia { background: rgba(34,197,94,0.1); color: #22c55e; border: 1px solid rgba(34,197,94,0.3); }
+    .stok-badge.terbatas { background: rgba(245,158,11,0.1); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
+    .stok-badge.habis { background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+    .stok-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .tersedia .stok-dot { background: #22c55e; }
+    .terbatas .stok-dot { background: #f59e0b; }
+    .habis .stok-dot { background: #ef4444; }
+
+    .action-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-keranjang-main { flex: 1; background: var(--accent); color: #fff; border: none; padding: 14px; border-radius: 6px; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; min-width: 140px; }
+    .btn-keranjang-main:hover { background: var(--accent-hover); }
+    .whatsapp-btn { flex: 1; display: flex; align-items: center; gap: 8px; justify-content: center; background: #25d366; color: #fff; border: none; padding: 14px; border-radius: 6px; font-size: 14px; font-weight: 700; cursor: pointer; text-decoration: none; transition: all 0.2s; min-width: 120px; }
+    .whatsapp-btn:hover { background: #1ebe5d; }
+
+    /* WISHLIST & COMPARE */
+    .secondary-btns { display: flex; gap: 10px; }
+    .btn-wishlist { flex: 1; padding: 12px; background: transparent; border: 1px solid var(--border); border-radius: 6px; color: var(--text-secondary); cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .btn-wishlist:hover, .btn-wishlist.active { border-color: #ef4444; color: #ef4444; background: rgba(239,68,68,0.05); }
+    .btn-compare { flex: 1; padding: 12px; background: transparent; border: 1px solid var(--border); border-radius: 6px; color: var(--text-secondary); cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .btn-compare:hover, .btn-compare.active { border-color: var(--accent); color: var(--accent); background: rgba(77,141,255,0.05); }
+
+    .specs { padding: 0 40px 48px; }
+    .specs-title { font-size: 20px; font-weight: 700; margin-bottom: 24px; color: var(--text-primary); }
+    .specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+    .spec-row { display: flex; background: var(--bg-card); }
+    .spec-key { width: 160px; padding: 14px 20px; font-size: 12px; color: var(--text-secondary); letter-spacing: 1px; text-transform: uppercase; border-right: 1px solid var(--border); flex-shrink: 0; font-weight: 600; }
+    .spec-val { padding: 14px 20px; font-size: 14px; color: var(--text-primary); font-weight: 500; }
+
+    /* ULASAN */
+    .ulasan-section { padding: 0 40px 60px; }
+    .ulasan-title { font-size: 22px; font-weight: 700; color: var(--text-primary); margin-bottom: 32px; }
+    .rating-summary { display: grid; grid-template-columns: auto 1fr; gap: 40px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 28px; margin-bottom: 32px; align-items: center; }
+    .rating-big { text-align: center; }
+    .rating-big-num { font-size: 64px; font-weight: 700; color: var(--accent); line-height: 1; }
+    .rating-big-stars { font-size: 24px; color: #f59e0b; margin: 8px 0; }
+    .rating-big-count { font-size: 13px; color: var(--text-secondary); }
+    .rating-bars { display: flex; flex-direction: column; gap: 8px; }
+    .rating-bar-row { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+    .rating-bar-label { color: var(--text-secondary); width: 40px; text-align: right; flex-shrink: 0; }
+    .rating-bar-track { flex: 1; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+    .rating-bar-fill { height: 100%; background: #f59e0b; border-radius: 4px; }
+    .rating-bar-count { color: var(--text-secondary); width: 30px; flex-shrink: 0; }
+    .ulasan-list { display: flex; flex-direction: column; gap: 20px; margin-bottom: 40px; }
+    .ulasan-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+    .ulasan-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+    .ulasan-user { display: flex; align-items: center; gap: 12px; }
+    .ulasan-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; color: #fff; flex-shrink: 0; }
+    .ulasan-nama { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+    .ulasan-date { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .ulasan-stars { font-size: 18px; color: #f59e0b; }
+    .ulasan-komentar { font-size: 14px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 12px; }
+    .ulasan-foto { width: 100px; height: 100px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; transition: transform 0.2s; }
+    .ulasan-foto:hover { transform: scale(1.05); }
+    .empty-ulasan { text-align: center; padding: 48px; color: var(--text-muted); background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 32px; }
+    .form-ulasan { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 28px; }
+    .form-title { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 24px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+    .form-label { font-size: 13px; font-weight: 600; color: var(--text-secondary); }
+    .form-input { padding: 10px 14px; background: var(--bg-main); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-size: 14px; outline: none; }
+    .form-input:focus { border-color: var(--accent); }
+    .form-textarea { padding: 10px 14px; background: var(--bg-main); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-size: 14px; outline: none; resize: vertical; min-height: 100px; font-family: inherit; }
+    .form-textarea:focus { border-color: var(--accent); }
+    .form-file { padding: 10px 14px; background: var(--bg-main); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-size: 14px; width: 100%; cursor: pointer; }
+    .star-rating { display: flex; gap: 6px; flex-direction: row-reverse; justify-content: flex-end; }
+    .star-rating input { display: none; }
+    .star-rating label { font-size: 32px; color: var(--border); cursor: pointer; transition: color 0.2s; }
+    .star-rating input:checked ~ label, .star-rating label:hover, .star-rating label:hover ~ label { color: #f59e0b; }
+    .btn-submit { background: var(--accent); color: #fff; border: none; padding: 14px 32px; border-radius: 6px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; width: 100%; margin-top: 8px; }
+    .btn-submit:hover { background: var(--accent-hover); }
+    .alert { padding: 12px 20px; border-radius: 6px; margin-bottom: 16px; font-size: 14px; font-weight: 500; }
+    .alert-success { background: rgba(77,141,255,0.1); border: 1px solid var(--accent); color: var(--accent); }
+    .alert-error { background: rgba(239,68,68,0.1); border: 1px solid #ef4444; color: #ef4444; }
+
+    .related { padding: 0 40px 60px; }
+    .related-title { font-size: 20px; font-weight: 700; margin-bottom: 24px; color: var(--text-primary); }
+    .related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .related-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-decoration: none; color: var(--text-primary); transition: all 0.2s; display: block; }
+    .related-card:hover { border-color: var(--accent); }
+    .related-img { width: 100%; height: 80px; object-fit: contain; margin-bottom: 10px; }
+    .related-name { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+    .related-price { font-size: 16px; color: var(--accent); font-weight: 700; }
+
+    /* WISHLIST PANEL */
+    .wishlist-panel { position: fixed; bottom: 30px; left: 30px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; z-index: 998; min-width: 220px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); display: none; }
+    .wishlist-panel.show { display: block; }
+    .wishlist-panel-title { font-size: 12px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+    .wishlist-item { font-size: 13px; color: var(--text-primary); padding: 4px 0; border-bottom: 1px solid var(--border); }
+    .wishlist-empty { font-size: 13px; color: var(--text-muted); }
+
+    /* COMPARE PANEL */
+    .compare-panel { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-card); border-top: 1px solid var(--border); padding: 16px 40px; z-index: 997; display: none; align-items: center; justify-content: space-between; box-shadow: 0 -4px 20px rgba(0,0,0,0.1); }
+    .compare-panel.show { display: flex; }
+    .compare-items { display: flex; gap: 16px; align-items: center; }
+    .compare-item { background: var(--bg-card2); border: 1px solid var(--border); border-radius: 8px; padding: 8px 16px; font-size: 13px; color: var(--text-primary); display: flex; align-items: center; gap: 8px; }
+    .compare-item-remove { cursor: pointer; color: var(--text-muted); font-size: 16px; }
+    .compare-item-remove:hover { color: #ef4444; }
+    .btn-compare-now { background: var(--accent); color: #fff; border: none; padding: 10px 24px; border-radius: 6px; font-size: 14px; font-weight: 700; cursor: pointer; }
+    .compare-label { font-size: 13px; color: var(--text-secondary); }
+
+    .notif { position: fixed; bottom: 30px; right: 30px; background: var(--gradient-brand); color: #fff; padding: 14px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; box-shadow: 0 4px 20px rgba(0,0,0,0.2); z-index: 999; transform: translateY(100px); opacity: 0; transition: all 0.3s; }
+    .notif.show { transform: translateY(0); opacity: 1; }
+
+    .foto-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; }
+    .foto-modal.active { display: flex; }
+    .foto-modal img { max-width: 90%; max-height: 90%; border-radius: 8px; }
+    .foto-modal-close { position: absolute; top: 20px; right: 30px; font-size: 32px; color: #fff; cursor: pointer; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+    <a href="/">Beranda</a><span>›</span>
+    <a href="/produk/">Produk</a><span>›</span>
+    {{ produk.nama }}
+</div>
+
+<div class="detail">
+    <div class="product-visual">
+        {% if produk.kategori %}<div class="product-visual-badge">{{ produk.kategori.nama }}</div>{% endif %}
+        {% if produk.gambar_url %}
+        <img src="{{ produk.gambar_url }}" alt="{{ produk.nama }}">
+        {% else %}
+        <div class="laptop-big">
+            <div class="laptop-screen-big"><div class="laptop-screen-inner-big"></div></div>
+            <div class="laptop-base-big"></div>
+        </div>
+        {% endif %}
+        <button class="btn-keranjang-visual" onclick="tambahKeranjang()">🛒 + Tambah ke Keranjang</button>
+        <div class="share-bar">
+            <button class="btn-share wa" onclick="shareWA()">💬 Share WA</button>
+            <button class="btn-share" onclick="shareCopy()">🔗 Copy Link</button>
+            <button class="btn-share" onclick="shareIG()">📸 Instagram</button>
+        </div>
+    </div>
+
+    <div class="product-info">
+        <div>
+            <div class="product-brand-big">{{ produk.merek.nama }}</div>
+            <div class="product-name-big">{{ produk.nama }}</div>
+            <div class="product-sku">SKU: {{ produk.sku }}</div>
+        </div>
+
+        {% if jumlah_ulasan > 0 %}
+        <div class="rating-mini">
+            <div class="stars-mini">{% for i in "12345" %}{% if forloop.counter <= rating_rata %}★{% else %}☆{% endif %}{% endfor %}</div>
+            <span class="rating-num">{{ rating_rata }}</span>
+            <span class="rating-count">({{ jumlah_ulasan }} ulasan)</span>
+        </div>
+        {% endif %}
+
+        <div>
+            {% if produk.harga_diskon %}
+            <span class="price-discount">{{ produk.harga_display }}</span>
+            <div class="product-price-big">{{ produk.harga_diskon_display }}</div>
+            {% else %}
+            <div class="product-price-big">{{ produk.harga_display }}</div>
+            {% endif %}
+        </div>
+
+        <!-- BADGE STOK -->
+        {% if produk.status == 'aktif' %}
+        {% if produk.stok and produk.stok.jumlah <= produk.stok.min_stok %}
+        <span class="stok-badge terbatas"><span class="stok-dot"></span>Stok Terbatas ({{ produk.stok.jumlah }} unit)</span>
+        {% else %}
+        <span class="stok-badge tersedia"><span class="stok-dot"></span>Stok Tersedia</span>
+        {% endif %}
+        {% else %}
+        <span class="stok-badge habis"><span class="stok-dot"></span>Stok Habis</span>
+        {% endif %}
+
+        <div class="product-desc">{{ produk.deskripsi }}</div>
+
+        <div class="action-btns">
+            <button class="btn-keranjang-main" onclick="tambahKeranjang()">🛒 Keranjang</button>
+            <a href="https://wa.me/6281299779053?text=Halo, saya tertarik dengan {{ produk.nama }} seharga {{ produk.harga_display }}" target="_blank" class="whatsapp-btn">💬 Beli via WA</a>
+        </div>
+
+        <div class="secondary-btns">
+            <button class="btn-wishlist" id="btnWishlist" onclick="toggleWishlist()">♡ Simpan ke Wishlist</button>
+            <button class="btn-compare" id="btnCompare" onclick="toggleCompare()">⚖️ Bandingkan</button>
+        </div>
+    </div>
+</div>
+
+{% if produk.detail_produk %}
+<div class="specs">
+    <div class="specs-title">Spesifikasi Lengkap</div>
+    <div class="specs-grid">
+        {% if produk.detail_produk.prosesor %}<div class="spec-row"><div class="spec-key">Prosesor</div><div class="spec-val">{{ produk.detail_produk.prosesor }}</div></div>{% endif %}
+        {% if produk.detail_produk.ram %}<div class="spec-row"><div class="spec-key">RAM</div><div class="spec-val">{{ produk.detail_produk.ram }}</div></div>{% endif %}
+        {% if produk.detail_produk.storage %}<div class="spec-row"><div class="spec-key">Storage</div><div class="spec-val">{{ produk.detail_produk.storage }}</div></div>{% endif %}
+        {% if produk.detail_produk.layar %}<div class="spec-row"><div class="spec-key">Layar</div><div class="spec-val">{{ produk.detail_produk.layar }}</div></div>{% endif %}
+        {% if produk.detail_produk.gpu %}<div class="spec-row"><div class="spec-key">GPU</div><div class="spec-val">{{ produk.detail_produk.gpu }}</div></div>{% endif %}
+        {% if produk.detail_produk.os %}<div class="spec-row"><div class="spec-key">OS</div><div class="spec-val">{{ produk.detail_produk.os }}</div></div>{% endif %}
+        {% if produk.detail_produk.baterai %}<div class="spec-row"><div class="spec-key">Baterai</div><div class="spec-val">{{ produk.detail_produk.baterai }}</div></div>{% endif %}
+        {% if produk.detail_produk.berat_kg %}<div class="spec-row"><div class="spec-key">Berat</div><div class="spec-val">{{ produk.detail_produk.berat_kg }} kg</div></div>{% endif %}
+    </div>
+</div>
+{% endif %}
+
+<!-- ULASAN -->
+<div class="ulasan-section" id="ulasan">
+    <div class="ulasan-title">Ulasan Pembeli ({{ jumlah_ulasan }})</div>
+
+    {% if messages %}{% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}{% endif %}
+
+    {% if jumlah_ulasan > 0 %}
+    <div class="rating-summary">
+        <div class="rating-big">
+            <div class="rating-big-num">{{ rating_rata }}</div>
+            <div class="rating-big-stars">{% for i in "12345" %}{% if forloop.counter <= rating_rata %}★{% else %}☆{% endif %}{% endfor %}</div>
+            <div class="rating-big-count">dari {{ jumlah_ulasan }} ulasan</div>
+        </div>
+        <div class="rating-bars">
+            {% for bintang, data in distribusi.items %}
+            <div class="rating-bar-row">
+                <span class="rating-bar-label">{{ bintang }}★</span>
+                <div class="rating-bar-track"><div class="rating-bar-fill" style="width:{{ data.persen }}%"></div></div>
+                <span class="rating-bar-count">{{ data.jumlah }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="ulasan-list">
+        {% for ulasan in ulasan_list %}
+        <div class="ulasan-card">
+            <div class="ulasan-top">
+                <div class="ulasan-user">
+                    <div class="ulasan-avatar">{{ ulasan.nama_pengulas|first|upper }}</div>
+                    <div>
+                        <div class="ulasan-nama">{{ ulasan.nama_pengulas }}</div>
+                        <div class="ulasan-date">{{ ulasan.created_at|date:"d M Y" }}</div>
+                    </div>
+                </div>
+                <div class="ulasan-stars">{% for i in ulasan.bintang_penuh %}★{% endfor %}{% for i in ulasan.bintang_kosong %}☆{% endfor %}</div>
+            </div>
+            <div class="ulasan-komentar">{{ ulasan.komentar }}</div>
+            {% if ulasan.foto %}<img src="{{ ulasan.foto.url }}" class="ulasan-foto" onclick="bukaFoto(this.src)" alt="Foto ulasan">{% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-ulasan">
+        <div style="font-size:40px; margin-bottom:12px;">💬</div>
+        <div style="font-size:16px; font-weight:600; color:var(--text-primary); margin-bottom:6px;">Belum ada ulasan</div>
+        <div>Jadilah yang pertama memberikan ulasan!</div>
+    </div>
+    {% endif %}
+
+    <div class="form-ulasan">
+        <div class="form-title">✍️ Tulis Ulasan</div>
+        <form method="POST" action="/produk/{{ produk.id }}/ulasan/" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Nama *</label>
+                    <input type="text" name="nama" class="form-input" placeholder="Nama kamu" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email *</label>
+                    <input type="email" name="email" class="form-input" placeholder="Email kamu" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Rating *</label>
+                <div class="star-rating">
+                    <input type="radio" name="rating" id="s5" value="5"><label for="s5">★</label>
+                    <input type="radio" name="rating" id="s4" value="4"><label for="s4">★</label>
+                    <input type="radio" name="rating" id="s3" value="3"><label for="s3">★</label>
+                    <input type="radio" name="rating" id="s2" value="2"><label for="s2">★</label>
+                    <input type="radio" name="rating" id="s1" value="1"><label for="s1">★</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Komentar *</label>
+                <textarea name="komentar" class="form-textarea" placeholder="Ceritakan pengalaman kamu..." required></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Foto (opsional)</label>
+                <input type="file" name="foto" class="form-file" accept="image/*">
+            </div>
+            <button type="submit" class="btn-submit">Kirim Ulasan</button>
+        </form>
+    </div>
+</div>
+
+{% if produk_related %}
+<div class="related">
+    <div class="related-title">Produk Serupa</div>
+    <div class="related-grid">
+        {% for p in produk_related %}
+        <a href="/produk/{{ p.id }}/" class="related-card">
+            {% if p.gambar_url %}<img src="{{ p.gambar_url }}" alt="{{ p.nama }}" class="related-img">{% endif %}
+            <div style="font-size:10px; color:var(--accent); letter-spacing:2px; text-transform:uppercase; margin-bottom:6px; font-weight:700;">{{ p.merek.nama }}</div>
+            <div class="related-name">{{ p.nama }}</div>
+            <div class="related-price">{{ p.harga_display }}</div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- COMPARE PANEL -->
+<div class="compare-panel" id="comparePanel">
+    <div>
+        <div style="font-size:12px; color:var(--text-muted); letter-spacing:2px; text-transform:uppercase; margin-bottom:8px;">Bandingkan Produk</div>
+        <div class="compare-items" id="compareItems"></div>
+    </div>
+    <div style="display:flex; gap:12px; align-items:center;">
+        <span class="compare-label" id="compareCount">0/3 produk</span>
+        <button class="btn-compare-now" onclick="bandingkanSekarang()">⚖️ Bandingkan Sekarang</button>
+        <button style="background:transparent; border:1px solid var(--border); color:var(--text-secondary); padding:10px 16px; border-radius:6px; cursor:pointer;" onclick="resetCompare()">Hapus Semua</button>
+    </div>
+</div>
+
+<div class="notif" id="notif">✅ Berhasil!</div>
+<div class="foto-modal" id="fotoModal" onclick="tutupFoto()">
+    <span class="foto-modal-close">✕</span>
+    <img id="fotoModalImg" src="" alt="Foto ulasan">
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const produkData = {
+    id: {{ produk.id }},
+    nama: "{{ produk.nama|escapejs }}",
+    merek: "{{ produk.merek.nama|escapejs }}",
+    harga: {{ produk.harga }},
+    gambar: "{{ produk.gambar_url }}",
+    sku: "{{ produk.sku }}"
+};
+
+function showNotif(msg) {
+    const notif = document.getElementById('notif');
+    notif.textContent = msg;
+    notif.classList.add('show');
+    setTimeout(() => notif.classList.remove('show'), 2500);
+}
+
+// KERANJANG
+function tambahKeranjang() {
+    let keranjang = JSON.parse(localStorage.getItem('keranjang') || '[]');
+    const idx = keranjang.findIndex(i => i.id === produkData.id);
+    if (idx >= 0) keranjang[idx].qty += 1;
+    else keranjang.push({ ...produkData, qty: 1 });
+    localStorage.setItem('keranjang', JSON.stringify(keranjang));
+    showNotif('✅ ' + produkData.nama + ' ditambahkan ke keranjang!');
+}
+
+// WISHLIST
+function toggleWishlist() {
+    let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+    const idx = wishlist.findIndex(i => i.id === produkData.id);
+    const btn = document.getElementById('btnWishlist');
+    if (idx >= 0) {
+        wishlist.splice(idx, 1);
+        btn.innerHTML = '♡ Simpan ke Wishlist';
+        btn.classList.remove('active');
+        showNotif('💔 Dihapus dari wishlist');
+    } else {
+        wishlist.push(produkData);
+        btn.innerHTML = '❤️ Tersimpan di Wishlist';
+        btn.classList.add('active');
+        showNotif('❤️ Ditambahkan ke wishlist!');
+    }
+    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+}
+
+// Cek status wishlist saat load
+window.addEventListener('load', () => {
+    let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+    if (wishlist.find(i => i.id === produkData.id)) {
+        document.getElementById('btnWishlist').innerHTML = '❤️ Tersimpan di Wishlist';
+        document.getElementById('btnWishlist').classList.add('active');
+    }
+    let compare = JSON.parse(localStorage.getItem('compare') || '[]');
+    if (compare.find(i => i.id === produkData.id)) {
+        document.getElementById('btnCompare').innerHTML = '✅ Ditambahkan';
+        document.getElementById('btnCompare').classList.add('active');
+    }
+    updateComparePanel();
+});
+
+// COMPARE
+function toggleCompare() {
+    let compare = JSON.parse(localStorage.getItem('compare') || '[]');
+    const idx = compare.findIndex(i => i.id === produkData.id);
+    const btn = document.getElementById('btnCompare');
+    if (idx >= 0) {
+        compare.splice(idx, 1);
+        btn.innerHTML = '⚖️ Bandingkan';
+        btn.classList.remove('active');
+        showNotif('Dihapus dari perbandingan');
+    } else {
+        if (compare.length >= 3) { showNotif('❌ Maksimal 3 produk!'); return; }
+        compare.push(produkData);
+        btn.innerHTML = '✅ Ditambahkan';
+        btn.classList.add('active');
+        showNotif('⚖️ Ditambahkan ke perbandingan!');
+    }
+    localStorage.setItem('compare', JSON.stringify(compare));
+    updateComparePanel();
+}
+
+function updateComparePanel() {
+    let compare = JSON.parse(localStorage.getItem('compare') || '[]');
+    const panel = document.getElementById('comparePanel');
+    const items = document.getElementById('compareItems');
+    const count = document.getElementById('compareCount');
+    if (compare.length > 0) {
+        panel.classList.add('show');
+        count.textContent = compare.length + '/3 produk';
+        items.innerHTML = compare.map(p => `
+            <div class="compare-item">
+                <span>${p.nama}</span>
+                <span class="compare-item-remove" onclick="hapusCompare(${p.id})">✕</span>
+            </div>
+        `).join('');
+    } else {
+        panel.classList.remove('show');
+    }
+}
+
+function hapusCompare(id) {
+    let compare = JSON.parse(localStorage.getItem('compare') || '[]');
+    compare = compare.filter(i => i.id !== id);
+    localStorage.setItem('compare', JSON.stringify(compare));
+    updateComparePanel();
+    if (id === produkData.id) {
+        document.getElementById('btnCompare').innerHTML = '⚖️ Bandingkan';
+        document.getElementById('btnCompare').classList.remove('active');
+    }
+}
+
+function resetCompare() {
+    localStorage.removeItem('compare');
+    updateComparePanel();
+    document.getElementById('btnCompare').innerHTML = '⚖️ Bandingkan';
+    document.getElementById('btnCompare').classList.remove('active');
+}
+
+function bandingkanSekarang() {
+    let compare = JSON.parse(localStorage.getItem('compare') || '[]');
+    if (compare.length < 2) { showNotif('❌ Pilih minimal 2 produk!'); return; }
+    const ids = compare.map(i => i.id).join(',');
+    window.location.href = '/bandingkan/?ids=' + ids;
+}
+
+// SHARE
+function shareWA() {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent('Cek laptop ini di NexusTech: {{ produk.nama }} - {{ produk.harga_display }}');
+    window.open('https://wa.me/?text=' + text + '%20' + url, '_blank');
+}
+
+function shareCopy() {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+        showNotif('🔗 Link berhasil disalin!');
+    });
+}
+
+function shareIG() {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+        showNotif('📸 Link disalin! Paste di Instagram Story kamu.');
+    });
+}
+
+function bukaFoto(src) {
+    document.getElementById('fotoModalImg').src = src;
+    document.getElementById('fotoModal').classList.add('active');
+}
+
+function tutupFoto() {
+    document.getElementById('fotoModal').classList.remove('active');
+}
+</script>
+{% endblock %}

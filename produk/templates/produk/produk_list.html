@@ -1,0 +1,158 @@
+{% extends 'produk/base.html' %}
+{% load static %}
+
+{% block title %}Semua Produk — NexusTech{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-header { padding: 48px 40px 32px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-end; }
+    .page-tag { font-size: 11px; color: var(--accent); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 8px; }
+    .page-title { font-size: 36px; font-weight: 700; color: var(--text-primary); }
+    .page-count { font-size: 13px; color: var(--text-secondary); }
+
+    .content { display: grid; grid-template-columns: 240px 1fr; min-height: 80vh; }
+    .sidebar { padding: 32px 24px; border-right: 1px solid var(--border); background: var(--bg-card); }
+    .sidebar-section { margin-bottom: 32px; }
+    .sidebar-title { font-size: 10px; letter-spacing: 3px; color: var(--accent); text-transform: uppercase; margin-bottom: 16px; font-weight: 700; }
+    .sidebar-item { display: block; padding: 8px 12px; border-radius: 4px; color: var(--text-secondary); text-decoration: none; font-size: 13px; transition: all 0.2s; margin-bottom: 4px; border: 1px solid transparent; font-weight: 500; }
+    .sidebar-item:hover, .sidebar-item.active { color: var(--accent); background: rgba(77,141,255,0.08); border-color: rgba(77,141,255,0.3); }
+    .search-box { width: 100%; padding: 10px 14px; background: var(--bg-main); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-size: 13px; outline: none; }
+    .search-box:focus { border-color: var(--accent); }
+    .search-box::placeholder { color: var(--text-muted); }
+
+    .main { padding: 32px; background: var(--bg-main); }
+    .sort-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .sort-label { font-size: 13px; color: var(--text-secondary); }
+    .sort-select { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-primary); padding: 8px 14px; border-radius: 4px; font-size: 13px; outline: none; cursor: pointer; }
+
+    .products { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .product-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; cursor: pointer; position: relative; transition: all 0.3s; text-decoration: none; color: var(--text-primary); display: block; }
+    .product-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(77,141,255,0.1); }
+    .product-badge { position: absolute; top: 12px; right: 12px; font-size: 10px; padding: 3px 8px; border-radius: 3px; background: var(--gradient-brand); color: #fff; letter-spacing: 1px; font-weight: 700; z-index: 1; }
+
+    .product-img { width: 100%; height: 160px; overflow: hidden; position: relative; background: var(--bg-card2); }
+    .product-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+    .product-card:hover .product-img img { transform: scale(1.05); }
+    .product-img-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+    .laptop-icon { width: 80px; }
+    .laptop-screen { width: 80px; height: 50px; background: var(--border); border-radius: 3px 3px 0 0; border: 2px solid var(--border2); display: flex; align-items: center; justify-content: center; }
+    .laptop-screen-inner { width: 60px; height: 34px; background: var(--screen-bg); border-radius: 2px; }
+    .laptop-base { width: 90px; height: 7px; background: var(--border); border-radius: 0 0 3px 3px; margin-left: -5px; border: 1px solid var(--border2); }
+
+    .product-body { padding: 14px; }
+    .product-brand { font-size: 10px; color: var(--accent); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 4px; font-weight: 700; }
+    .product-name { font-size: 14px; font-weight: 700; margin-bottom: 6px; line-height: 1.3; color: var(--text-primary); }
+    .product-specs { font-size: 11px; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.8; }
+    .product-footer { display: flex; justify-content: space-between; align-items: center; }
+    .product-price { font-size: 16px; font-weight: 700; color: var(--accent); }
+    .btn-add { font-size: 11px; padding: 6px 12px; border-radius: 4px; border: 1px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer; transition: all 0.2s; font-weight: 600; }
+    .btn-add:hover { background: var(--accent); color: #fff; }
+
+    .empty-state { grid-column: 1/-1; text-align: center; padding: 80px; color: var(--text-muted); }
+
+    /* Notifikasi */
+    .notif { position: fixed; bottom: 30px; right: 30px; background: var(--gradient-brand); color: #fff; padding: 14px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; box-shadow: 0 4px 20px rgba(0,0,0,0.2); z-index: 999; transform: translateY(100px); opacity: 0; transition: all 0.3s; }
+    .notif.show { transform: translateY(0); opacity: 1; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <div class="page-tag">— Koleksi Lengkap</div>
+        <h1 class="page-title">Semua Produk</h1>
+    </div>
+    <div class="page-count">{{ produk_list|length }} produk ditemukan</div>
+</div>
+
+<div class="content">
+    <div class="sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-title">Pencarian</div>
+            <form method="GET">
+                <input type="text" name="q" value="{{ request.GET.q }}" class="search-box" placeholder="Cari laptop...">
+            </form>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-title">Kategori</div>
+            <a href="/produk/" class="sidebar-item {% if not request.GET.kategori %}active{% endif %}">Semua</a>
+            {% for kat in kategori_list %}
+            <a href="?kategori={{ kat.slug }}" class="sidebar-item {% if request.GET.kategori == kat.slug %}active{% endif %}">{{ kat.nama }}</a>
+            {% endfor %}
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-title">Merek</div>
+            <a href="/produk/" class="sidebar-item {% if not request.GET.merek %}active{% endif %}">Semua Merek</a>
+            {% for m in merek_list %}
+            <a href="?merek={{ m.id }}" class="sidebar-item {% if request.GET.merek == m.id|stringformat:'s' %}active{% endif %}">{{ m.nama }}</a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="sort-bar">
+            <div class="sort-label">{{ produk_list|length }} produk ditemukan</div>
+            <select class="sort-select" onchange="window.location='?sort='+this.value">
+                <option value="terbaru">Terbaru</option>
+                <option value="termurah">Harga Termurah</option>
+                <option value="termahal">Harga Termahal</option>
+            </select>
+        </div>
+        <div class="products">
+            {% for produk in produk_list %}
+            <a href="/produk/{{ produk.id }}/" class="product-card">
+                {% if produk.kategori %}<div class="product-badge">{{ produk.kategori.nama }}</div>{% endif %}
+                <div class="product-img">
+                    {% if produk.gambar_url %}
+                    <img src="{{ produk.gambar_url }}" alt="{{ produk.nama }}" onerror="this.parentElement.innerHTML='<div class=\'product-img-placeholder\'><div class=\'laptop-icon\'><div class=\'laptop-screen\'><div class=\'laptop-screen-inner\'></div></div><div class=\'laptop-base\'></div></div></div>'">
+                    {% else %}
+                    <div class="product-img-placeholder">
+                        <div class="laptop-icon">
+                            <div class="laptop-screen"><div class="laptop-screen-inner"></div></div>
+                            <div class="laptop-base"></div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="product-body">
+                    <div class="product-brand">{{ produk.merek.nama }}</div>
+                    <div class="product-name">{{ produk.nama }}</div>
+                    {% if produk.detail_produk %}
+                    <div class="product-specs">{{ produk.detail_produk.prosesor|truncatechars:28 }} · {{ produk.detail_produk.ram }} · {{ produk.detail_produk.storage }}</div>
+                    {% else %}
+                    <div class="product-specs">{{ produk.deskripsi|truncatechars:60 }}</div>
+                    {% endif %}
+                    <div class="product-footer">
+                        <div class="product-price">{{ produk.harga_display }}</div>
+                        <button class="btn-add" onclick="event.preventDefault(); tambahKeKeranjang({{ produk.id }}, '{{ produk.nama|escapejs }}', '{{ produk.merek.nama|escapejs }}', {{ produk.harga }}, '{{ produk.gambar_url }}', '{{ produk.sku }}')">+ Keranjang</button>
+                    </div>
+                </div>
+            </a>
+            {% empty %}
+            <div class="empty-state"><div style="font-size:48px; margin-bottom:16px;">🖥️</div><div>Tidak ada produk.</div></div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="notif" id="notif">✅ Ditambahkan ke keranjang!</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function tambahKeKeranjang(id, nama, merek, harga, gambar, sku) {
+    let keranjang = JSON.parse(localStorage.getItem('keranjang') || '[]');
+    const idx = keranjang.findIndex(i => i.id === id);
+    if (idx >= 0) {
+        keranjang[idx].qty += 1;
+    } else {
+        keranjang.push({ id, nama, merek, harga, gambar, sku, qty: 1 });
+    }
+    localStorage.setItem('keranjang', JSON.stringify(keranjang));
+    const notif = document.getElementById('notif');
+    notif.textContent = '✅ ' + nama + ' ditambahkan!';
+    notif.classList.add('show');
+    setTimeout(() => notif.classList.remove('show'), 2500);
+}
+</script>
+{% endblock %}
