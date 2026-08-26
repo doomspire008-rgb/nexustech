@@ -1,12 +1,47 @@
 from django.contrib import admin
 from django.urls import path, reverse
 from django.utils.html import format_html
-from .models import Merek, Kategori, Produk, Pelanggan, Pesanan, ItemPesanan
+from .models import Merek, Kategori, Produk, Pelanggan, Pesanan, ItemPesanan, Ulasan
 
+admin.site.site_header = "NexusTech Admin Panel"
+admin.site.site_title = "NexusTech Admin"
+admin.site.index_title = "Manajemen Toko Laptop NexusTech"
 
 admin.site.register(Merek)
 admin.site.register(Kategori)
 admin.site.register(Pelanggan)
+
+
+@admin.register(Ulasan)
+class UlasanAdmin(admin.ModelAdmin):
+    list_display = ['nama_pengulas', 'produk', 'rating_stars', 'foto_preview', 'disetujui', 'created_at']
+    list_filter = ['rating', 'disetujui', 'created_at']
+    search_fields = ['nama_pengulas', 'email_pengulas', 'komentar', 'produk__nama']
+    list_editable = ['disetujui']
+    readonly_fields = ['foto_preview_detail', 'created_at']
+
+    def rating_stars(self, obj):
+        stars = '★' * obj.rating + '☆' * (5 - obj.rating)
+        return format_html('<span style="color:#f59e0b;font-size:14px;">{} ({})</span>', stars, obj.rating)
+    rating_stars.short_description = 'Rating'
+
+    def foto_preview(self, obj):
+        if obj.foto:
+            return format_html(
+                '<a href="{}" target="_blank"><img src="{}" style="width:40px;height:40px;object-fit:cover;border-radius:4px;border:1px solid #ccc;"/></a>',
+                obj.foto.url, obj.foto.url
+            )
+        return '-'
+    foto_preview.short_description = 'Foto'
+
+    def foto_preview_detail(self, obj):
+        if obj.foto:
+            return format_html(
+                '<a href="{}" target="_blank"><img src="{}" style="max-width:300px;max-height:300px;border-radius:8px;border:1px solid #ccc;"/></a>',
+                obj.foto.url, obj.foto.url
+            )
+        return 'Tidak ada foto'
+    foto_preview_detail.short_description = 'Pratinjau Foto'
 
 
 @admin.register(Produk)
@@ -73,3 +108,4 @@ class PesananAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
         if obj.pk:
             obj.hitung_ulang_total()
+

@@ -130,6 +130,45 @@ def tambah_ulasan(request, pk):
     return redirect(f'/produk/{pk}/')
 
 
+def bandingkan(request):
+    raw_ids = request.GET.get('ids', '').strip()
+    id_list = []
+    if raw_ids:
+        for part in raw_ids.split(','):
+            part = part.strip()
+            if part.isdigit():
+                id_list.append(int(part))
+
+    # Batasi maksimal 4 produk untuk dibandingkan
+    id_list = id_list[:4]
+
+    produk_list = []
+    if id_list:
+        produk_dict = {
+            p.id: p for p in Produk.objects.filter(id__in=id_list, status='aktif').select_related('merek', 'kategori')
+        }
+        for pid in id_list:
+            if pid in produk_dict:
+                p = produk_dict[pid]
+                p.harga_display = format_rupiah(p.harga)
+                if p.harga_diskon:
+                    p.harga_diskon_display = format_rupiah(p.harga_diskon)
+                p.rating = p.rating_rata()
+                p.total_ulasan = p.jumlah_ulasan()
+                produk_list.append(p)
+
+    semua_produk = Produk.objects.filter(status='aktif').select_related('merek', 'kategori').order_by('nama')
+    for p in semua_produk:
+        p.harga_display = format_rupiah(p.harga)
+
+    context = {
+        'produk_list': produk_list,
+        'semua_produk': semua_produk,
+        'selected_ids': [p.id for p in produk_list],
+    }
+    return render(request, 'produk/bandingkan.html', context)
+
+
 def keranjang(request):
     return render(request, 'produk/keranjang.html', {})
 
@@ -300,7 +339,7 @@ GEMINI_API_URL = (
 
 
 def _build_katalog_context():
-    """Ambil daftar produk aktif untuk dikasih ke Claude sebagai konteks katalog."""
+    """Ambil daftar produk aktif untuk dikasih ke Gemini sebagai konteks katalog."""
     produk_qs = Produk.objects.filter(status='aktif').select_related('merek', 'kategori')
     katalog = []
     for p in produk_qs:

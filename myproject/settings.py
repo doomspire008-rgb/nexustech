@@ -32,7 +32,7 @@ SECRET_KEY = 'django-insecure-2^4g#r%)*_q5pvyr@o*7w4kzhz)xwxp42xkp&&wg9(w%+xchkp
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [ 'nexustech-2kdv.onrender.com', 'localhost', '127.0.0.1' ]
+ALLOWED_HOSTS = ['nexustech-2kdv.onrender.com', '.onrender.com', 'localhost', '127.0.0.1', 'testserver']
 
 
 # Application definition
@@ -50,7 +50,6 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
-    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -129,7 +128,14 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'produk' / 'static']
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
+# Media files (Uploaded files / photos)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
