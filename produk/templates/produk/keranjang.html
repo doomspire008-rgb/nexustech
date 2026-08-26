@@ -115,13 +115,14 @@
     .item-sku {
         font-size: 12px;
         color: var(--text-muted);
+        font-family: monospace;
     }
 
     .item-price {
         font-family: var(--font-display);
         font-size: 16px;
         font-weight: 800;
-        color: var(--text-primary);
+        color: var(--accent);
         margin-top: 6px;
     }
 
@@ -196,17 +197,19 @@
         border: 1px solid var(--border);
         border-radius: var(--radius-md);
         color: var(--text-muted);
+        box-shadow: var(--shadow-card);
     }
 
     .empty-icon {
         font-size: 54px;
-        color: var(--text-muted);
+        color: var(--accent);
+        opacity: 0.8;
         margin-bottom: 16px;
     }
 
     .empty-title {
         font-size: 22px;
-        font-weight: 700;
+        font-weight: 800;
         color: var(--text-primary);
         margin-bottom: 8px;
     }
@@ -295,7 +298,7 @@
         align-items: center;
         justify-content: center;
         gap: 8px;
-        box-shadow: 0 4px 12px rgba(37, 211, 102, 0.25);
+        box-shadow: 0 4px 14px rgba(37, 211, 102, 0.25);
     }
 
     .btn-wa-checkout:hover {
@@ -364,12 +367,12 @@
 {% block content %}
 <div class="page-header-container">
     <div class="page-tag"><i class="bi bi-bag-check"></i> Keranjang Belanja</div>
-    <h1 class="page-title">Keranjang Saya</h1>
+    <h1 class="page-title">Keranjang Belanja Saya</h1>
 </div>
 
 <div class="keranjang-wrapper">
     <div id="keranjang-app">
-        <!-- Diisi oleh JavaScript -->
+        <!-- Rendered by JavaScript -->
     </div>
 </div>
 {% endblock %}
@@ -409,13 +412,17 @@ function ubahQty(id, delta) {
 }
 
 function buildPesanWA(keranjang) {
-    let pesan = 'Halo NexusTech, saya ingin memesan laptop:%0A%0A';
+    let lines = ['Halo NexusTech, saya ingin memesan laptop:', ''];
     keranjang.forEach((item, index) => {
-        pesan += `${index + 1}. *${item.nama}* (%0Ax${item.qty} = ${formatRupiah(item.harga * item.qty)})%0A`;
+        lines.push(`${index + 1}. *${item.nama}* (${item.qty}x = ${formatRupiah(item.harga * item.qty)})`);
     });
     const total = keranjang.reduce((s, i) => s + i.harga * i.qty, 0);
-    pesan += `%0A*Total Belanja:* ${formatRupiah(total)}%0AMohon info ketersediaan stok & pengiriman. Terima kasih!`;
-    return `https://wa.me/6281299779053?text=${pesan}`;
+    lines.push('');
+    lines.push(`*Total Belanja:* ${formatRupiah(total)}`);
+    lines.push('Mohon info ketersediaan stok & pengiriman. Terima kasih!');
+    
+    const pesanEncoded = encodeURIComponent(lines.join('\n'));
+    return `https://wa.me/6281299779053?text=${pesanEncoded}`;
 }
 
 function renderKeranjang() {
@@ -426,8 +433,8 @@ function renderKeranjang() {
         app.innerHTML = `
         <div class="empty-cart">
             <div class="empty-icon"><i class="bi bi-bag-x"></i></div>
-            <div class="empty-title">Keranjang Belanja Kosong</div>
-            <div class="empty-desc">Anda belum menambahkan produk laptop ke keranjang.</div>
+            <div class="empty-title">Keranjang Belanja Masih Kosong</div>
+            <div class="empty-desc">Anda belum menambahkan produk laptop pilihan ke dalam keranjang.</div>
             <a href="/produk/" class="btn-primary-tech" style="display:inline-flex;">
                 <i class="bi bi-grid"></i> Jelajahi Produk Sekarang
             </a>
@@ -477,22 +484,22 @@ function renderKeranjang() {
         <div>
             <div class="ringkasan">
                 <div class="ringkasan-title">
-                    <i class="bi bi-receipt"></i> Ringkasan Belanja
+                    <i class="bi bi-receipt" style="color:var(--accent);"></i> Ringkasan Belanja
                 </div>
                 <div class="ringkasan-row">
                     <span class="ringkasan-label">Total Kuantitas</span>
                     <span class="ringkasan-val">${totalItem} unit</span>
                 </div>
                 <div class="ringkasan-row">
-                    <span class="ringkasan-label">Subtotal</span>
+                    <span class="ringkasan-label">Subtotal Produk</span>
                     <span class="ringkasan-val">${formatRupiah(total)}</span>
                 </div>
                 <div class="ringkasan-row">
-                    <span class="ringkasan-label">Estimasi Ongkir</span>
-                    <span class="ringkasan-val" style="color:var(--accent);">Konfirmasi via WA</span>
+                    <span class="ringkasan-label">Estimasi Pengiriman</span>
+                    <span class="ringkasan-val" style="color:var(--accent); font-size:12px;">Konfirmasi via WA</span>
                 </div>
                 <div class="ringkasan-total">
-                    <span class="ringkasan-total-label">Total Pembayaran</span>
+                    <span class="ringkasan-total-label">Total Estimasi</span>
                     <span class="ringkasan-total-val">${formatRupiah(total)}</span>
                 </div>
                 <a href="${buildPesanWA(keranjang)}" target="_blank" class="btn-wa-checkout">
@@ -502,7 +509,7 @@ function renderKeranjang() {
                     <i class="bi bi-arrow-left"></i> Lanjut Belanja
                 </a>
                 <div class="note">
-                    <i class="bi bi-shield-check"></i> Transaksi langsung dipandu oleh tim admin resmi NexusTech.
+                    <i class="bi bi-shield-check" style="color:#10b981;"></i> Transaksi langsung dan aman dipandu oleh tim admin NexusTech.
                 </div>
             </div>
         </div>

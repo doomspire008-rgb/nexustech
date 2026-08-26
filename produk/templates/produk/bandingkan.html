@@ -5,8 +5,10 @@
 
 {% block extra_css %}
 <style>
-    .page-header {
-        padding: 48px 40px 32px;
+    .page-header-container {
+        max-width: 1320px;
+        margin: 0 auto;
+        padding: 48px 24px 28px;
         border-bottom: 1px solid var(--border);
         display: flex;
         justify-content: space-between;
@@ -14,36 +16,42 @@
         flex-wrap: wrap;
         gap: 16px;
     }
+
     .page-tag {
-        font-size: 11px;
-        color: var(--accent);
-        letter-spacing: 3px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
         text-transform: uppercase;
-        margin-bottom: 8px;
-        font-weight: 700;
+        color: var(--accent);
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
     }
+
     .page-title {
-        font-size: 36px;
-        font-weight: 700;
+        font-size: clamp(1.8rem, 3vw, 2.4rem);
+        font-weight: 800;
         color: var(--text-primary);
     }
-    .page-sub {
+
+    .page-count {
         font-size: 14px;
         color: var(--text-secondary);
-        margin-top: 6px;
+        font-weight: 500;
     }
 
     .compare-container {
-        padding: 40px;
-        max-width: 1400px;
+        max-width: 1320px;
         margin: 0 auto;
+        padding: 36px 24px 60px;
     }
 
-    /* Selector Bar */
-    .compare-controls {
-        background: var(--bg-card);
+    /* Selector Control Bar */
+    .compare-controls-card {
+        background: var(--bg-surface);
         border: 1px solid var(--border);
-        border-radius: 12px;
+        border-radius: var(--radius-md);
         padding: 20px 24px;
         margin-bottom: 32px;
         display: flex;
@@ -51,85 +59,100 @@
         align-items: center;
         flex-wrap: wrap;
         gap: 16px;
+        box-shadow: var(--shadow-card);
     }
+
     .compare-controls-left {
         display: flex;
         align-items: center;
         gap: 12px;
+        flex-wrap: wrap;
     }
-    .compare-select-box {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
+
     .compare-select {
         background: var(--bg-main);
         border: 1px solid var(--border);
         color: var(--text-primary);
         padding: 10px 16px;
-        border-radius: 6px;
-        font-size: 14px;
+        border-radius: var(--radius-sm);
+        font-size: 13px;
         outline: none;
-        min-width: 240px;
+        min-width: 280px;
     }
+
     .compare-select:focus {
         border-color: var(--accent);
     }
+
     .btn-add-compare {
-        background: var(--accent);
-        color: #fff;
+        background: var(--gradient-brand);
+        color: #ffffff;
         border: none;
         padding: 10px 20px;
-        border-radius: 6px;
+        border-radius: var(--radius-sm);
         font-size: 13px;
         font-weight: 700;
         cursor: pointer;
-        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 4px 12px var(--accent-glow);
     }
+
     .btn-add-compare:hover {
-        background: var(--accent-hover);
+        opacity: 0.95;
+        transform: translateY(-1px);
     }
+
     .btn-clear-all {
-        background: transparent;
-        border: 1px solid var(--border);
+        background: rgba(239, 68, 68, 0.08);
+        border: 1px solid rgba(239, 68, 68, 0.25);
         color: #ef4444;
         padding: 9px 18px;
-        border-radius: 6px;
+        border-radius: var(--radius-sm);
         font-size: 13px;
         font-weight: 600;
         cursor: pointer;
-        transition: all 0.2s;
-    }
-    .btn-clear-all:hover {
-        background: rgba(239, 68, 68, 0.1);
-        border-color: #ef4444;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
     }
 
-    /* Table Matrix */
+    .btn-clear-all:hover {
+        background: #ef4444;
+        color: #ffffff;
+    }
+
+    /* Comparison Table */
     .table-wrapper {
         overflow-x: auto;
-        background: var(--bg-card);
+        background: var(--bg-surface);
         border: 1px solid var(--border);
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-card);
+        -webkit-overflow-scrolling: touch;
     }
+
     .compare-table {
         width: 100%;
         border-collapse: collapse;
-        min-width: 760px;
+        min-width: 800px;
     }
+
     .compare-table th, .compare-table td {
         padding: 18px 20px;
         border-bottom: 1px solid var(--border);
         vertical-align: middle;
         text-align: left;
     }
+
     .compare-table tr:last-child td {
         border-bottom: none;
     }
+
     .col-feature {
         width: 180px;
-        background: var(--bg-card2);
+        background: var(--bg-card);
         font-size: 12px;
         font-weight: 700;
         color: var(--text-secondary);
@@ -137,13 +160,14 @@
         text-transform: uppercase;
         border-right: 1px solid var(--border);
     }
+
     .col-product {
         min-width: 240px;
-        background: var(--bg-card);
+        background: var(--bg-surface);
         position: relative;
     }
 
-    /* Product Card inside Table Header */
+    /* Product Card in Table Header */
     .cmp-card {
         display: flex;
         flex-direction: column;
@@ -152,33 +176,36 @@
         gap: 12px;
         position: relative;
     }
+
     .cmp-remove {
         position: absolute;
         top: -6px;
         right: 0;
-        width: 26px;
-        height: 26px;
+        width: 28px;
+        height: 28px;
         border-radius: 50%;
-        background: var(--bg-card2);
+        background: var(--bg-main);
         border: 1px solid var(--border);
         color: var(--text-muted);
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 13px;
-        transition: all 0.2s;
+        font-size: 14px;
+        transition: var(--transition-smooth);
     }
+
     .cmp-remove:hover {
         background: #ef4444;
-        color: #fff;
+        color: #ffffff;
         border-color: #ef4444;
     }
+
     .cmp-img-box {
         width: 100%;
         height: 160px;
-        background: var(--bg-main);
-        border-radius: 8px;
+        background: var(--bg-card);
+        border-radius: var(--radius-sm);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -186,6 +213,7 @@
         padding: 12px;
         border: 1px solid var(--border);
     }
+
     .cmp-img-box img {
         max-width: 100%;
         max-height: 100%;
@@ -194,29 +222,41 @@
         object-fit: contain;
         filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.15));
     }
+
     .cmp-brand {
         font-size: 10px;
         color: var(--accent);
-        letter-spacing: 3px;
+        letter-spacing: 2px;
         text-transform: uppercase;
         font-weight: 700;
     }
+
     .cmp-name {
-        font-size: 15px;
+        font-size: 14px;
         font-weight: 700;
         color: var(--text-primary);
-        line-height: 1.3;
+        line-height: 1.35;
+        min-height: 38px;
     }
+
+    .cmp-price-box {
+        display: flex;
+        align-items: baseline;
+        gap: 6px;
+        justify-content: center;
+    }
+
     .cmp-price {
-        font-size: 20px;
-        font-weight: 700;
+        font-family: var(--font-display);
+        font-size: 18px;
+        font-weight: 800;
         color: var(--accent);
     }
+
     .cmp-discount {
-        font-size: 13px;
+        font-size: 12px;
         color: var(--text-muted);
         text-decoration: line-through;
-        margin-right: 6px;
     }
 
     /* Actions in table */
@@ -226,163 +266,189 @@
         gap: 8px;
         width: 100%;
     }
+
     .cmp-btn-cart {
         width: 100%;
         padding: 10px;
-        background: var(--accent);
-        color: #fff;
+        background: var(--gradient-brand);
+        color: #ffffff;
         border: none;
-        border-radius: 6px;
-        font-size: 13px;
+        border-radius: var(--radius-sm);
+        font-size: 12px;
         font-weight: 700;
         cursor: pointer;
-        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
     }
+
     .cmp-btn-cart:hover {
-        background: var(--accent-hover);
+        opacity: 0.95;
+        transform: translateY(-1px);
     }
+
     .cmp-btn-wa {
         width: 100%;
         padding: 8px;
         background: #25d366;
-        color: #fff;
+        color: #ffffff;
         border: none;
-        border-radius: 6px;
+        border-radius: var(--radius-sm);
         font-size: 12px;
         font-weight: 700;
         cursor: pointer;
         text-decoration: none;
-        display: block;
-        text-align: center;
-        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
     }
+
     .cmp-btn-wa:hover {
-        background: #1ebe5d;
+        background: #20ba5a;
     }
+
     .cmp-btn-detail {
         width: 100%;
         padding: 8px;
-        background: transparent;
+        background: var(--bg-main);
         color: var(--text-secondary);
         border: 1px solid var(--border);
-        border-radius: 6px;
+        border-radius: var(--radius-sm);
         font-size: 12px;
         font-weight: 600;
         cursor: pointer;
         text-decoration: none;
         display: block;
         text-align: center;
-        transition: all 0.2s;
     }
+
     .cmp-btn-detail:hover {
         color: var(--accent);
         border-color: var(--accent);
     }
 
-    /* Values */
     .val-highlight {
         color: var(--text-primary);
         font-weight: 600;
-        font-size: 14px;
+        font-size: 13px;
     }
+
     .val-stars {
         color: #f59e0b;
-        font-size: 16px;
+        font-size: 15px;
         font-weight: 700;
         display: flex;
         align-items: center;
         gap: 6px;
     }
+
     .badge-status {
         display: inline-block;
         padding: 4px 10px;
-        border-radius: 12px;
+        border-radius: var(--radius-full);
         font-size: 11px;
         font-weight: 700;
-        background: rgba(34,197,94,0.1);
-        color: #22c55e;
-        border: 1px solid rgba(34,197,94,0.3);
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+        border: 1px solid rgba(16, 185, 129, 0.25);
     }
 
     /* Empty State */
     .empty-compare {
         text-align: center;
-        padding: 80px 20px;
-        background: var(--bg-card);
+        padding: 80px 24px;
+        background: var(--bg-surface);
         border: 1px solid var(--border);
-        border-radius: 14px;
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-card);
     }
+
     .empty-icon {
         font-size: 54px;
+        color: var(--accent);
+        opacity: 0.8;
         margin-bottom: 16px;
     }
+
     .empty-title {
         font-size: 22px;
-        font-weight: 700;
+        font-weight: 800;
         color: var(--text-primary);
         margin-bottom: 8px;
     }
+
     .empty-desc {
         font-size: 14px;
         color: var(--text-secondary);
-        max-width: 460px;
-        margin: 0 auto 24px;
+        max-width: 480px;
+        margin: 0 auto 28px;
         line-height: 1.6;
     }
+
     .quick-pick-title {
         font-size: 12px;
         color: var(--accent);
-        letter-spacing: 2px;
+        letter-spacing: 1.5px;
         text-transform: uppercase;
         font-weight: 700;
         margin-bottom: 16px;
     }
+
     .quick-pick-grid {
         display: flex;
         justify-content: center;
         gap: 12px;
         flex-wrap: wrap;
         max-width: 800px;
-        margin: 0 auto;
+        margin: 0 auto 32px;
     }
+
     .quick-pick-card {
         background: var(--bg-main);
         border: 1px solid var(--border);
-        border-radius: 8px;
+        border-radius: var(--radius-sm);
         padding: 10px 16px;
         color: var(--text-primary);
         cursor: pointer;
-        transition: all 0.2s;
+        transition: var(--transition-smooth);
         font-size: 13px;
         font-weight: 600;
         display: flex;
         align-items: center;
         gap: 8px;
     }
+
     .quick-pick-card:hover {
         border-color: var(--accent);
         color: var(--accent);
         transform: translateY(-2px);
     }
 
-    /* Notification */
-    .notif {
+    /* Toast Notification */
+    .toast-notif-compare {
         position: fixed;
         bottom: 30px;
         right: 30px;
-        background: var(--gradient-brand);
-        color: #fff;
-        padding: 14px 24px;
-        border-radius: 8px;
+        background: var(--bg-surface);
+        color: var(--text-primary);
+        border: 1px solid var(--accent);
+        padding: 14px 22px;
+        border-radius: var(--radius-sm);
         font-size: 14px;
         font-weight: 600;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        z-index: 999;
-        transform: translateY(100px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        z-index: 1000;
+        transform: translateY(120px);
         opacity: 0;
-        transition: all 0.3s;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
-    .notif.show {
+
+    .toast-notif-compare.show {
         transform: translateY(0);
         opacity: 1;
     }
@@ -390,14 +456,13 @@
 {% endblock %}
 
 {% block content %}
-<div class="page-header">
+<div class="page-header-container">
     <div>
-        <div class="page-tag"><i class="bi bi-arrow-left-right"></i> Perbandingan Produk</div>
-        <h1 class="page-title">Bandingkan Laptop</h1>
-        <div class="page-sub">Bandingkan spesifikasi teknis, performa prosesor, harga, dan rating untuk menentukan pilihan terbaik.</div>
+        <div class="page-tag"><i class="bi bi-arrow-left-right"></i> Fitur Komparasi</div>
+        <h1 class="page-title">Bandingkan Spesifikasi Laptop</h1>
     </div>
     {% if produk_list %}
-    <div style="font-size:13px; color:var(--text-secondary);">
+    <div class="page-count">
         Menampilkan <strong>{{ produk_list|length }}</strong> dari maksimal 4 produk
     </div>
     {% endif %}
@@ -405,22 +470,26 @@
 
 <div class="compare-container">
     <!-- Kontrol Tambah Produk -->
-    <div class="compare-controls">
+    <div class="compare-controls-card">
         <div class="compare-controls-left">
-            <span style="font-size:13px; font-weight:600; color:var(--text-secondary);">Tambah ke Perbandingan:</span>
+            <span style="font-size:13px; font-weight:700; color:var(--text-secondary);"><i class="bi bi-plus-circle"></i> Tambah Laptop:</span>
             <select id="pilihProdukSelect" class="compare-select">
-                <option value="">-- Pilih Laptop Lain --</option>
+                <option value="">-- Pilih Laptop Lainnya --</option>
                 {% for p in semua_produk %}
                     {% if p.id not in selected_ids %}
-                    <option value="{{ p.id }}">{{ p.nama }} ({{ p.merek.nama }}) - {{ p.harga_display }}</option>
+                    <option value="{{ p.id }}">{{ p.nama }} ({{ p.merek.nama }}) — {{ p.harga_display }}</option>
                     {% endif %}
                 {% endfor %}
             </select>
-            <button class="btn-add-compare" onclick="tambahDariSelect()"><i class="bi bi-plus-lg"></i> Tambahkan</button>
+            <button class="btn-add-compare" onclick="tambahDariSelect()">
+                <i class="bi bi-plus-lg"></i> Tambahkan
+            </button>
         </div>
         {% if produk_list %}
         <div>
-            <button class="btn-clear-all" onclick="kosongkanSemua()"><i class="bi bi-trash3"></i> Hapus Semua</button>
+            <button class="btn-clear-all" onclick="kosongkanSemua()">
+                <i class="bi bi-trash3"></i> Hapus Semua
+            </button>
         </div>
         {% endif %}
     </div>
@@ -445,7 +514,7 @@
                             </div>
                             <div class="cmp-brand">{{ p.merek.nama }}</div>
                             <div class="cmp-name">{{ p.nama }}</div>
-                            <div>
+                            <div class="cmp-price-box">
                                 {% if p.harga_diskon %}
                                 <span class="cmp-discount">{{ p.harga_display }}</span>
                                 <span class="cmp-price">{{ p.harga_diskon_display }}</span>
@@ -454,8 +523,12 @@
                                 {% endif %}
                             </div>
                             <div class="cmp-actions">
-                                <button class="cmp-btn-cart" onclick="tambahKeKeranjang({{ p.id }}, '{{ p.nama|escapejs }}', '{{ p.merek.nama|escapejs }}', {{ p.harga }}, '{{ p.gambar_url|default:'' }}', '{{ p.sku }}')"><i class="bi bi-cart-plus"></i> + Keranjang</button>
-                                <a href="https://wa.me/6281299779053?text=Halo,%20saya%20tertarik%20dengan%20{{ p.nama|urlencode }}%20seharga%20{{ p.harga_display|urlencode }}" target="_blank" class="cmp-btn-wa"><i class="bi bi-whatsapp"></i> Pesan WA</a>
+                                <button class="cmp-btn-cart" onclick="tambahKeKeranjang({{ p.id }}, '{{ p.nama|escapejs }}', '{{ p.merek.nama|escapejs }}', {{ p.harga }}, '{{ p.gambar_url|default:'' }}', '{{ p.sku }}')">
+                                    <i class="bi bi-cart-plus"></i> + Keranjang
+                                </button>
+                                <a href="https://wa.me/6281299779053?text=Halo%20NexusTech,%20saya%20tertarik%20dengan%20{{ p.nama|urlencode }}%20seharga%20{{ p.harga_display|urlencode }}" target="_blank" class="cmp-btn-wa">
+                                    <i class="bi bi-whatsapp"></i> Pesan WA
+                                </a>
                                 <a href="/produk/{{ p.id }}/" class="cmp-btn-detail">Lihat Detail →</a>
                             </div>
                         </div>
@@ -525,37 +598,45 @@
     {% else %}
     <!-- Tampilan Kosong -->
     <div class="empty-compare">
-        <div class="empty-icon">⚖️</div>
-        <div class="empty-title">Belum Ada Produk untuk Dibandingkan</div>
-        <div class="empty-desc">Pilih 2 hingga 4 laptop untuk melihat perbandingan spesifikasi, harga, dan fitur secara langsung berdampingan.</div>
+        <div class="empty-icon"><i class="bi bi-arrow-left-right"></i></div>
+        <div class="empty-title">Belum Ada Laptop untuk Dibandingkan</div>
+        <div class="empty-desc">Pilih 2 hingga 4 laptop untuk melihat perbandingan spesifikasi, harga, rating, dan fitur secara langsung berdampingan.</div>
         
-        <div class="quick-pick-title">Atau Pilih Cepat Produk Populer:</div>
+        <div class="quick-pick-title">Pilih Cepat Produk Populer:</div>
         <div class="quick-pick-grid">
             {% for p in semua_produk|slice:":4" %}
             <div class="quick-pick-card" onclick="pilihCepat({{ p.id }})">
-                <span>➕</span>
+                <i class="bi bi-plus-circle-fill" style="color:var(--accent);"></i>
                 <span>{{ p.nama }} ({{ p.harga_display }})</span>
             </div>
             {% endfor %}
         </div>
 
-        <div style="margin-top:32px;">
-            <a href="/produk/" class="btn-primary">Jelajahi Katalog Produk</a>
+        <div>
+            <a href="/produk/" class="btn-primary-tech" style="display:inline-flex;">
+                <i class="bi bi-grid"></i> Jelajahi Katalog Produk
+            </a>
         </div>
     </div>
     {% endif %}
 </div>
 
-<div class="notif" id="notif">✅ Berhasil!</div>
+<!-- Toast -->
+<div class="toast-notif-compare" id="toastCompare">
+    <i class="bi bi-check-circle-fill" style="color:#10b981; font-size:18px;"></i>
+    <span id="toastCompareMsg">Berhasil!</span>
+</div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-function showNotif(msg) {
-    const notif = document.getElementById('notif');
-    notif.textContent = msg;
-    notif.classList.add('show');
-    setTimeout(() => notif.classList.remove('show'), 2500);
+function showCompareToast(pesan) {
+    const toast = document.getElementById('toastCompare');
+    const msg = document.getElementById('toastCompareMsg');
+    if (!toast || !msg) return;
+    msg.textContent = pesan;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2800);
 }
 
 function getCompareIds() {
@@ -569,12 +650,10 @@ function getCompareIds() {
 }
 
 function setCompareUrlAndStorage(ids) {
-    // Sinkronkan ke localStorage
     let stored = JSON.parse(localStorage.getItem('compare') || '[]');
     stored = stored.filter(i => ids.includes(i.id));
     localStorage.setItem('compare', JSON.stringify(stored));
 
-    // Reload dengan query param baru
     if (ids.length > 0) {
         window.location.href = '/bandingkan/?ids=' + ids.join(',');
     } else {
@@ -586,16 +665,16 @@ function tambahDariSelect() {
     const select = document.getElementById('pilihProdukSelect');
     const val = parseInt(select.value);
     if (!val) {
-        showNotif('⚠️ Silakan pilih laptop terlebih dahulu');
+        showCompareToast('Silakan pilih laptop terlebih dahulu');
         return;
     }
     const currentIds = getCompareIds();
     if (currentIds.includes(val)) {
-        showNotif('ℹ️ Produk sudah ada dalam perbandingan');
+        showCompareToast('Produk sudah ada dalam perbandingan');
         return;
     }
     if (currentIds.length >= 4) {
-        showNotif('❌ Maksimal 4 produk untuk dibandingkan');
+        showCompareToast('Maksimal 4 produk untuk dibandingkan');
         return;
     }
     currentIds.push(val);
@@ -629,10 +708,11 @@ function tambahKeKeranjang(id, nama, merek, harga, gambar, sku) {
         keranjang.push({ id, nama, merek, harga, gambar, sku, qty: 1 });
     }
     localStorage.setItem('keranjang', JSON.stringify(keranjang));
-    showNotif('✅ ' + nama + ' ditambahkan ke keranjang!');
+    if (typeof refreshCartBadge === 'function') refreshCartBadge();
+    showCompareToast(nama + ' berhasil ditambahkan ke keranjang!');
 }
 
-// Auto-sync query params jika user baru membuka /bandingkan/ tanpa param tapi ada localStorage
+// Auto-sync query params jika membuka /bandingkan/ tanpa param tapi ada localStorage
 window.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     if (!urlParams.get('ids')) {
