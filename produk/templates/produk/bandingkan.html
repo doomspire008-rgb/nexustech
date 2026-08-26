@@ -389,9 +389,9 @@
 {% block content %}
 <div class="page-header">
     <div>
-        <div class="page-tag">— Perbandingan Produk</div>
-        <h1 class="page-title">⚖️ Bandingkan Laptop</h1>
-        <div class="page-sub">Bandingkan spesifikasi teknis, harga, dan rating untuk menentukan pilihan terbaik.</div>
+        <div class="page-tag"><i class="bi bi-arrow-left-right"></i> Perbandingan Produk</div>
+        <h1 class="page-title">Bandingkan Laptop</h1>
+        <div class="page-sub">Bandingkan spesifikasi teknis, performa prosesor, harga, dan rating untuk menentukan pilihan terbaik.</div>
     </div>
     {% if produk_list %}
     <div style="font-size:13px; color:var(--text-secondary);">
@@ -413,11 +413,11 @@
                     {% endif %}
                 {% endfor %}
             </select>
-            <button class="btn-add-compare" onclick="tambahDariSelect()">+ Tambahkan</button>
+            <button class="btn-add-compare" onclick="tambahDariSelect()"><i class="bi bi-plus-lg"></i> Tambahkan</button>
         </div>
         {% if produk_list %}
         <div>
-            <button class="btn-clear-all" onclick="kosongkanSemua()">🗑 Hapus Semua</button>
+            <button class="btn-clear-all" onclick="kosongkanSemua()"><i class="bi bi-trash3"></i> Hapus Semua</button>
         </div>
         {% endif %}
     </div>
@@ -437,7 +437,7 @@
                                 {% if p.gambar_url %}
                                 <img src="{{ p.gambar_url }}" alt="{{ p.nama }}" onerror="this.src='/static/img/laptop-placeholder.png'">
                                 {% else %}
-                                <div style="font-size:36px;">💻</div>
+                                <div style="font-size:36px; color:var(--accent);"><i class="bi bi-laptop"></i></div>
                                 {% endif %}
                             </div>
                             <div class="cmp-brand">{{ p.merek.nama }}</div>
@@ -451,8 +451,8 @@
                                 {% endif %}
                             </div>
                             <div class="cmp-actions">
-                                <button class="cmp-btn-cart" onclick="tambahKeKeranjang({{ p.id }}, '{{ p.nama|escapejs }}', '{{ p.merek.nama|escapejs }}', {{ p.harga }}, '{{ p.gambar_url|default:'' }}', '{{ p.sku }}')">🛒 + Keranjang</button>
-                                <a href="https://wa.me/6281299779053?text=Halo,%20saya%20tertarik%20dengan%20{{ p.nama|urlencode }}%20seharga%20{{ p.harga_display|urlencode }}" target="_blank" class="cmp-btn-wa">💬 Pesan WA</a>
+                                <button class="cmp-btn-cart" onclick="tambahKeKeranjang({{ p.id }}, '{{ p.nama|escapejs }}', '{{ p.merek.nama|escapejs }}', {{ p.harga }}, '{{ p.gambar_url|default:'' }}', '{{ p.sku }}')"><i class="bi bi-cart-plus"></i> + Keranjang</button>
+                                <a href="https://wa.me/6281299779053?text=Halo,%20saya%20tertarik%20dengan%20{{ p.nama|urlencode }}%20seharga%20{{ p.harga_display|urlencode }}" target="_blank" class="cmp-btn-wa"><i class="bi bi-whatsapp"></i> Pesan WA</a>
                                 <a href="/produk/{{ p.id }}/" class="cmp-btn-detail">Lihat Detail →</a>
                             </div>
                         </div>

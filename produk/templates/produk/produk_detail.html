@@ -171,11 +171,11 @@
             <div class="laptop-base-big"></div>
         </div>
         {% endif %}
-        <button class="btn-keranjang-visual" onclick="tambahKeranjang()">🛒 + Tambah ke Keranjang</button>
+        <button class="btn-keranjang-visual" onclick="tambahKeranjang()"><i class="bi bi-cart-plus"></i> + Tambah ke Keranjang</button>
         <div class="share-bar">
-            <button class="btn-share wa" onclick="shareWA()">💬 Share WA</button>
-            <button class="btn-share" onclick="shareCopy()">🔗 Copy Link</button>
-            <button class="btn-share" onclick="shareIG()">📸 Instagram</button>
+            <button class="btn-share wa" onclick="shareWA()"><i class="bi bi-whatsapp"></i> WhatsApp</button>
+            <button class="btn-share" onclick="shareCopy()"><i class="bi bi-link-45deg"></i> Salin Link</button>
+            <button class="btn-share" onclick="shareIG()"><i class="bi bi-instagram"></i> Instagram</button>
         </div>
     </div>
 
@@ -217,13 +217,13 @@
         <div class="product-desc">{{ produk.deskripsi }}</div>
 
         <div class="action-btns">
-            <button class="btn-keranjang-main" onclick="tambahKeranjang()">🛒 Keranjang</button>
-            <a href="https://wa.me/6281299779053?text=Halo, saya tertarik dengan {{ produk.nama }} seharga {{ produk.harga_display }}" target="_blank" class="whatsapp-btn">💬 Beli via WA</a>
+            <button class="btn-keranjang-main" onclick="tambahKeranjang()"><i class="bi bi-cart-plus"></i> Tambah Keranjang</button>
+            <a href="https://wa.me/6281299779053?text=Halo, saya tertarik dengan {{ produk.nama }} seharga {{ produk.harga_display }}" target="_blank" class="whatsapp-btn"><i class="bi bi-whatsapp"></i> Pesan via WA</a>
         </div>
 
         <div class="secondary-btns">
-            <button class="btn-wishlist" id="btnWishlist" onclick="toggleWishlist()">♡ Simpan ke Wishlist</button>
-            <button class="btn-compare" id="btnCompare" onclick="toggleCompare()">⚖️ Bandingkan</button>
+            <button class="btn-wishlist" id="btnWishlist" onclick="toggleWishlist()"><i class="bi bi-heart"></i> Simpan Wishlist</button>
+            <button class="btn-compare" id="btnCompare" onclick="toggleCompare()"><i class="bi bi-arrow-left-right"></i> Bandingkan</button>
         </div>
     </div>
 </div>
@@ -289,14 +289,14 @@
     </div>
     {% else %}
     <div class="empty-ulasan">
-        <div style="font-size:40px; margin-bottom:12px;">💬</div>
+        <div style="font-size:40px; margin-bottom:12px; color:var(--text-muted);"><i class="bi bi-chat-square-text"></i></div>
         <div style="font-size:16px; font-weight:600; color:var(--text-primary); margin-bottom:6px;">Belum ada ulasan</div>
-        <div>Jadilah yang pertama memberikan ulasan!</div>
+        <div>Jadilah yang pertama memberikan ulasan untuk laptop ini!</div>
     </div>
     {% endif %}
 
     <div class="form-ulasan">
-        <div class="form-title">✍️ Tulis Ulasan</div>
+        <div class="form-title"><i class="bi bi-pencil-square"></i> Tulis Ulasan Produk</div>
         <form method="POST" action="/produk/{{ produk.id }}/ulasan/" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-grid">
@@ -356,12 +356,12 @@
     </div>
     <div style="display:flex; gap:12px; align-items:center;">
         <span class="compare-label" id="compareCount">0/3 produk</span>
-        <button class="btn-compare-now" onclick="bandingkanSekarang()">⚖️ Bandingkan Sekarang</button>
+        <button class="btn-compare-now" onclick="bandingkanSekarang()"><i class="bi bi-arrow-left-right"></i> Bandingkan Sekarang</button>
         <button style="background:transparent; border:1px solid var(--border); color:var(--text-secondary); padding:10px 16px; border-radius:6px; cursor:pointer;" onclick="resetCompare()">Hapus Semua</button>
     </div>
 </div>
 
-<div class="notif" id="notif">✅ Berhasil!</div>
+<div class="notif" id="notif">Berhasil!</div>
 <div class="foto-modal" id="fotoModal" onclick="tutupFoto()">
     <span class="foto-modal-close">✕</span>
     <img id="fotoModalImg" src="" alt="Foto ulasan">

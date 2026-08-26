@@ -1,241 +1,1079 @@
 {% extends 'produk/base.html' %}
 {% load static %}
 
-{% block title %}NexusTech — Toko Laptop{% endblock %}
+{% block title %}NexusTech — Toko Laptop Resmi & Terpercaya{% endblock %}
 
 {% block extra_css %}
 <style>
-    .hero { padding: 80px 40px; display: flex; flex-direction: column; align-items: flex-start; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
-    .hero-blob { position: absolute; top: -120px; right: -120px; width: 560px; height: 560px; border-radius: 50%; background: radial-gradient(circle, rgba(77,141,255,0.14) 0%, rgba(255,180,67,0.06) 55%, transparent 75%); pointer-events: none; will-change: transform; }
-    .hero-content { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: flex-start; will-change: transform, opacity; }
-    .hero-tag { font-family: sans-serif; font-size: 30px; color: var(--accent); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 16px; border: 5px solid var(--border2); padding: 6px 14px; border-radius: 4px; display: inline-block; }
-    .hero-title { font-size: 52px; font-weight: 700; line-height: 1.1; margin-bottom: 16px; color: var(--text-primary); }
-    .hero-title span { color: var(--accent); }
-    .hero-sub { font-family: sans-serif; font-size: 16px; color: var(--text-secondary); margin-bottom: 32px; max-width: 500px; line-height: 1.8; }
-    .hero-btns { display: flex; gap: 14px; }
-
-    /* ===== Animasi saat halaman pertama kali dibuka ===== */
-    @keyframes heroFadeUp {
-        from { opacity: 0; transform: translateY(36px); }
-        to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes heroBlobIn {
-        from { opacity: 0; transform: scale(0.8); }
-        to   { opacity: 1; transform: scale(1); }
-    }
-    .hero-tag, .hero-title, .hero-sub, .hero-btns { opacity: 0; }
-    .hero-blob { opacity: 0; }
-    .hero-loaded .hero-blob { animation: heroBlobIn 1.1s ease-out 0s forwards; }
-    .hero-loaded .hero-tag   { animation: heroFadeUp 0.75s ease-out 0.1s forwards; }
-    .hero-loaded .hero-title { animation: heroFadeUp 0.75s ease-out 0.28s forwards; }
-    .hero-loaded .hero-sub   { animation: heroFadeUp 0.75s ease-out 0.46s forwards; }
-    .hero-loaded .hero-btns  { animation: heroFadeUp 0.75s ease-out 0.64s forwards; }
-
-    @media (prefers-reduced-motion: reduce) {
-        .hero-tag, .hero-title, .hero-sub, .hero-btns, .hero-blob { animation: none !important; opacity: 1 !important; transform: none !important; }
+    /* ===== HERO SECTION ===== */
+    .hero-container {
+        position: relative;
+        padding: 64px 24px 72px;
+        max-width: 1320px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        align-items: center;
+        gap: 48px;
+        overflow: hidden;
     }
 
-    .stats { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--border); }
-    .stat { padding: 28px 40px; border-right: 1px solid var(--border); transition: background 0.2s; }
-    .stat:last-child { border-right: none; }
-    .stat:hover { background: var(--bg-card); }
-    .stat-num { font-size: 32px; font-weight: 700; color: var(--accent); }
-    .stat-label { font-size: 12px; color: var(--text-secondary); letter-spacing: 1px; margin-top: 4px; }
+    /* Ambient Background Glow */
+    .hero-ambient-glow {
+        position: absolute;
+        top: -100px;
+        right: 10%;
+        width: 500px;
+        height: 500px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, rgba(99, 102, 241, 0.05) 50%, transparent 70%);
+        pointer-events: none;
+        z-index: 0;
+    }
 
-    .section { padding: 60px 40px; }
-    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .section-tag { font-size: 11px; color: var(--accent); letter-spacing: 3px; text-transform: uppercase; }
-    .section-title { font-size: 28px; font-weight: 700; margin-bottom: 32px; color: var(--text-primary); }
-    .section-more { font-size: 13px; color: var(--accent); text-decoration: none; }
-    .section-more:hover { text-decoration: underline; }
+    .hero-content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
 
-    .filter-bar { display: flex; gap: 10px; margin-bottom: 28px; }
-    .filter-btn { font-size: 12px; padding: 7px 18px; border-radius: 4px; border: 1px solid var(--border); background: transparent; color: var(--text-secondary); cursor: pointer; letter-spacing: 1px; transition: all 0.2s; text-transform: uppercase; }
-    .filter-btn:hover, .filter-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(77,141,255,0.08); }
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--badge-bg);
+        color: var(--badge-text);
+        border: 1px solid var(--badge-border);
+        padding: 6px 14px;
+        border-radius: var(--radius-full);
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        margin-bottom: 20px;
+    }
 
-    .products { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-    .product-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; cursor: pointer; position: relative; transition: all 0.3s; text-decoration: none; color: var(--text-primary); display: block; }
-    .product-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 8px 24px rgba(77,141,255,0.1); }
-    .product-badge { position: absolute; top: 14px; right: 14px; font-size: 10px; padding: 4px 10px; border-radius: 4px; background: var(--gradient-brand); color: #fff; letter-spacing: 1px; text-transform: uppercase; font-weight: 700; z-index: 1; }
+    .hero-badge .badge-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #10b981;
+        box-shadow: 0 0 8px #10b981;
+        animation: pulseDot 2s infinite ease-in-out;
+    }
 
-    .product-img { width: 100%; height: 180px; overflow: hidden; background: var(--bg-card2); }
-    .product-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
-    .product-card:hover .product-img img { transform: scale(1.05); }
-    .product-img-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
-    .laptop-icon { width: 90px; }
-    .laptop-screen { width: 90px; height: 56px; background: var(--border); border-radius: 4px 4px 0 0; border: 2px solid var(--border2); display: flex; align-items: center; justify-content: center; }
-    .laptop-screen-inner { width: 70px; height: 40px; background: var(--screen-bg); border-radius: 2px; }
-    .laptop-base { width: 100px; height: 8px; background: var(--border); border-radius: 0 0 4px 4px; margin-left: -5px; border: 1px solid var(--border2); }
+    @keyframes pulseDot {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.4; transform: scale(0.85); }
+    }
 
-    .product-body { padding: 16px; }
-    .product-brand { font-size: 10px; color: var(--accent); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 6px; font-weight: 700; }
-    .product-name { font-size: 15px; font-weight: 700; margin-bottom: 8px; line-height: 1.3; color: var(--text-primary); }
-    .product-specs { font-size: 12px; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.8; }
-    .product-footer { display: flex; justify-content: space-between; align-items: center; }
-    .product-price { font-size: 18px; font-weight: 700; color: var(--accent); }
-    .btn-add { font-size: 11px; padding: 7px 14px; border-radius: 4px; border: 1px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer; letter-spacing: 1px; transition: all 0.2s; font-weight: 600; }
-    .btn-add:hover { background: var(--accent); color: #fff; }
+    .hero-title {
+        font-size: clamp(2.3rem, 4.5vw, 3.8rem);
+        font-weight: 800;
+        line-height: 1.15;
+        color: var(--text-primary);
+        margin-bottom: 20px;
+        letter-spacing: -0.03em;
+    }
 
-    .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding: 0 40px 60px; }
-    .feature { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 24px; transition: border-color 0.2s; }
-    .feature:hover { border-color: var(--accent); }
-    .feature-icon { width: 44px; height: 44px; border-radius: 8px; background: rgba(77,141,255,0.12); border: 1px solid rgba(77,141,255,0.3); display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 14px; }
-    .feature-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; color: var(--text-primary); }
-    .feature-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.8; }
+    .hero-title span {
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
 
-    .brands { display: flex; gap: 16px; flex-wrap: wrap; }
-    .brand-chip { padding: 10px 24px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; color: var(--text-secondary); letter-spacing: 2px; text-transform: uppercase; background: var(--bg-card); transition: all 0.2s; text-decoration: none; font-weight: 600; }
-    .brand-chip:hover { border-color: var(--accent); color: var(--accent); }
+    .hero-sub {
+        font-size: clamp(1rem, 1.8vw, 1.125rem);
+        color: var(--text-secondary);
+        line-height: 1.7;
+        margin-bottom: 32px;
+        max-width: 540px;
+    }
 
-    .notif { position: fixed; bottom: 30px; right: 30px; background: var(--gradient-brand); color: #fff; padding: 14px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; box-shadow: 0 4px 20px rgba(0,0,0,0.2); z-index: 999; transform: translateY(100px); opacity: 0; transition: all 0.3s; }
-    .notif.show { transform: translateY(0); opacity: 1; }
+    .hero-actions {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        margin-bottom: 32px;
+    }
+
+    .hero-trust-bar {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+        width: 100%;
+    }
+
+    .hero-trust-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-secondary);
+    }
+
+    .hero-trust-item i {
+        color: var(--accent);
+        font-size: 16px;
+    }
+
+    /* Hero Showcase Card */
+    .hero-showcase {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        justify-content: center;
+    }
+
+    .showcase-card {
+        width: 100%;
+        max-width: 440px;
+        background: var(--bg-surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 24px;
+        box-shadow: var(--shadow-card);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .showcase-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--accent-gradient);
+    }
+
+    .showcase-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+    }
+
+    .showcase-tag {
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .showcase-status {
+        background: rgba(16, 185, 129, 0.12);
+        color: #10b981;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        padding: 3px 10px;
+        border-radius: var(--radius-full);
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .showcase-graphic {
+        width: 100%;
+        height: 200px;
+        background: var(--bg-card);
+        border-radius: var(--radius-md);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        position: relative;
+        border: 1px solid var(--border);
+    }
+
+    .laptop-graphic-svg {
+        width: 140px;
+        height: auto;
+        color: var(--accent);
+        filter: drop-shadow(0 6px 14px var(--accent-glow));
+    }
+
+    .showcase-specs-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .showcase-spec-chip {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--bg-main);
+        border: 1px solid var(--border);
+        padding: 8px 12px;
+        border-radius: var(--radius-sm);
+        font-size: 12px;
+    }
+
+    .showcase-spec-chip span.label {
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .showcase-spec-chip span.val {
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+
+    .showcase-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 14px;
+        border-top: 1px solid var(--border);
+    }
+
+    .showcase-price-tag {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .showcase-price-tag small {
+        font-size: 11px;
+        color: var(--text-muted);
+    }
+
+    .showcase-price-tag strong {
+        font-size: 18px;
+        font-weight: 800;
+        color: var(--accent);
+    }
+
+    /* ===== STATS SECTION ===== */
+    .stats-wrapper {
+        background: var(--bg-surface);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+    }
+
+    .stats-container {
+        max-width: 1320px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .stat-item {
+        padding: 32px 24px;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        border-right: 1px solid var(--border);
+        transition: background 0.2s;
+    }
+
+    .stat-item:last-child {
+        border-right: none;
+    }
+
+    .stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: var(--radius-sm);
+        background: var(--badge-bg);
+        border: 1px solid var(--badge-border);
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        flex-shrink: 0;
+    }
+
+    .stat-number {
+        font-family: var(--font-display);
+        font-size: 26px;
+        font-weight: 800;
+        color: var(--text-primary);
+        line-height: 1.1;
+    }
+
+    .stat-desc {
+        font-size: 13px;
+        color: var(--text-secondary);
+        margin-top: 4px;
+        font-weight: 500;
+    }
+
+    /* ===== SECTION COMMON ===== */
+    .section-wrapper {
+        max-width: 1320px;
+        margin: 0 auto;
+        padding: 64px 24px;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 28px;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .section-subhead {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .section-title {
+        font-size: clamp(1.6rem, 3vw, 2.2rem);
+        font-weight: 800;
+        color: var(--text-primary);
+        line-height: 1.2;
+    }
+
+    .section-link {
+        color: var(--accent);
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .section-link:hover {
+        transform: translateX(4px);
+    }
+
+    /* Filter Tabs */
+    .filter-tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 32px;
+        flex-wrap: wrap;
+    }
+
+    .filter-btn {
+        background: var(--bg-surface);
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        padding: 9px 18px;
+        border-radius: var(--radius-full);
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .filter-btn:hover {
+        border-color: var(--accent);
+        color: var(--text-primary);
+    }
+
+    .filter-btn.active {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #ffffff;
+        box-shadow: 0 4px 12px var(--accent-glow);
+    }
+
+    /* ===== PRODUCTS GRID ===== */
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+        gap: 24px;
+    }
+
+    .product-card {
+        background: var(--bg-surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        text-decoration: none;
+        color: var(--text-primary);
+        display: flex;
+        flex-direction: column;
+        box-shadow: var(--shadow-card);
+        position: relative;
+    }
+
+    .product-card:hover {
+        border-color: var(--border-hover);
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-hover);
+    }
+
+    .card-badge {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        background: var(--badge-bg);
+        border: 1px solid var(--badge-border);
+        color: var(--badge-text);
+        font-size: 11px;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: var(--radius-full);
+        z-index: 2;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .product-media {
+        width: 100%;
+        height: 200px;
+        background: var(--bg-card);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .product-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+
+    .product-card:hover .product-media img {
+        transform: scale(1.05);
+    }
+
+    .placeholder-laptop-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-muted);
+        gap: 8px;
+    }
+
+    .placeholder-laptop-box i {
+        font-size: 48px;
+        color: var(--accent);
+        opacity: 0.7;
+    }
+
+    .card-content {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    .card-brand {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--accent);
+        margin-bottom: 6px;
+    }
+
+    .card-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--text-primary);
+        line-height: 1.35;
+        margin-bottom: 10px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .card-specs {
+        font-size: 12px;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin-bottom: 18px;
+        flex: 1;
+        background: var(--bg-main);
+        padding: 8px 12px;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .card-specs i {
+        color: var(--accent);
+    }
+
+    .card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 14px;
+        border-top: 1px solid var(--border);
+        margin-top: auto;
+    }
+
+    .card-price {
+        font-family: var(--font-display);
+        font-size: 18px;
+        font-weight: 800;
+        color: var(--text-primary);
+    }
+
+    .btn-card-add {
+        background: var(--badge-bg);
+        border: 1px solid var(--badge-border);
+        color: var(--accent);
+        padding: 8px 14px;
+        border-radius: var(--radius-sm);
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .btn-card-add:hover {
+        background: var(--accent);
+        color: #ffffff;
+        border-color: var(--accent);
+    }
+
+    /* ===== BRANDS SECTION ===== */
+    .brands-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 14px;
+    }
+
+    .brand-card-item {
+        background: var(--bg-surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 16px 12px;
+        text-align: center;
+        text-decoration: none;
+        color: var(--text-primary);
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .brand-card-item:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+        background: var(--bg-card);
+        transform: translateY(-2px);
+    }
+
+    /* ===== VALUE PROPOSITION / FEATURES ===== */
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 20px;
+    }
+
+    .feature-card {
+        background: var(--bg-surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 28px 24px;
+    }
+
+    .feature-card:hover {
+        border-color: var(--border-hover);
+        transform: translateY(-3px);
+    }
+
+    .feature-icon-box {
+        width: 52px;
+        height: 52px;
+        border-radius: var(--radius-sm);
+        background: var(--badge-bg);
+        border: 1px solid var(--badge-border);
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        margin-bottom: 18px;
+    }
+
+    .feature-card-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+    }
+
+    .feature-card-desc {
+        font-size: 13px;
+        color: var(--text-secondary);
+        line-height: 1.7;
+    }
+
+    /* ===== BANNER CALL TO ACTION ===== */
+    .cta-banner {
+        background: var(--bg-surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 44px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 32px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--shadow-card);
+    }
+
+    .cta-banner::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+        pointer-events: none;
+    }
+
+    .cta-title {
+        font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+        font-weight: 800;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+    }
+
+    .cta-desc {
+        font-size: 14px;
+        color: var(--text-secondary);
+        max-width: 520px;
+        line-height: 1.6;
+    }
+
+    .cta-actions {
+        display: flex;
+        gap: 12px;
+        flex-shrink: 0;
+    }
+
+    /* ===== NOTIFICATION TOAST ===== */
+    .toast-notif {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: var(--bg-surface);
+        color: var(--text-primary);
+        border: 1px solid var(--accent);
+        padding: 14px 22px;
+        border-radius: var(--radius-sm);
+        font-size: 14px;
+        font-weight: 600;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        z-index: 1000;
+        transform: translateY(120px);
+        opacity: 0;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .toast-notif.show {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    .toast-notif i {
+        color: #10b981;
+        font-size: 18px;
+    }
+
+    /* ===== RESPONSIVENESS ===== */
+    @media (max-width: 992px) {
+        .hero-container {
+            grid-template-columns: 1fr;
+            padding: 40px 24px;
+            gap: 40px;
+        }
+        .stats-container {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .stat-item:nth-child(2) {
+            border-right: none;
+        }
+        .stat-item:nth-child(1), .stat-item:nth-child(2) {
+            border-bottom: 1px solid var(--border);
+        }
+        .cta-banner {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 32px 24px;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .hero-container {
+            padding: 28px 16px;
+        }
+        .section-wrapper {
+            padding: 48px 16px;
+        }
+        .stats-container {
+            grid-template-columns: 1fr;
+        }
+        .stat-item {
+            border-right: none !important;
+            border-bottom: 1px solid var(--border);
+            padding: 20px 16px;
+        }
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+        .hero-actions {
+            flex-direction: column;
+            width: 100%;
+        }
+        .hero-actions a {
+            width: 100%;
+            justify-content: center;
+        }
+        .cta-actions {
+            flex-direction: column;
+            width: 100%;
+        }
+        .cta-actions a, .cta-actions button {
+            width: 100%;
+            justify-content: center;
+        }
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="hero" id="heroSection">
-    <div class="hero-blob"></div>
-    <div class="hero-content">
-        <div class="hero-tag">⚡ New Arrival 2026</div>
-        <h1 class="hero-title">Temukan Laptop<br><span>Masa Depanmu</span></h1>
-        <p class="hero-sub">Koleksi laptop terkini dari merek terpercaya dunia. Performa tinggi untuk gaming, kerja, dan kreativitas tanpa batas.</p>
-        <div class="hero-btns">
-            <a href="/produk/" class="btn-primary">Jelajahi Produk</a>
-            <a href="/produk/?kategori=gaming" class="btn-outline">Lihat Gaming</a>
+<!-- HERO SECTION -->
+<div class="hero-container" id="heroSection">
+    <div class="hero-ambient-glow"></div>
+    
+    <div class="hero-content" data-aos="fade-up" data-aos-duration="600">
+        <div class="hero-badge">
+            <span class="badge-dot"></span>
+            <i class="bi bi-stars"></i> Official Laptop & Tech Partner • 2026
+        </div>
+        
+        <h1 class="hero-title">
+            Performa Ekstrem untuk <span>Kreator & Gamer</span> Masa Depan
+        </h1>
+        
+        <p class="hero-sub">
+            Temukan koleksi laptop orisinal terbaik dunia. Dari ultra-portable bertenaga AI hingga laptop gaming flagship dengan grafis tanpa kompromi.
+        </p>
+        
+        <div class="hero-actions">
+            <a href="/produk/" class="btn-primary-tech">
+                <i class="bi bi-grid-fill"></i> Jelajahi Katalog
+                <i class="bi bi-arrow-right"></i>
+            </a>
+            <a href="/bandingkan/" class="btn-secondary-tech">
+                <i class="bi bi-arrow-left-right"></i> Bandingkan Spesifikasi
+            </a>
+        </div>
+        
+        <div class="hero-trust-bar">
+            <div class="hero-trust-item">
+                <i class="bi bi-patch-check-fill"></i> Garansi Resmi Distributor
+            </div>
+            <div class="hero-trust-item">
+                <i class="bi bi-shield-lock-fill"></i> 100% Produk Original
+            </div>
+            <div class="hero-trust-item">
+                <i class="bi bi-truck"></i> Pengiriman Berasuransi
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Spotlight Showcase Visual -->
+    <div class="hero-showcase" data-aos="fade-left" data-aos-duration="700">
+        <div class="showcase-card">
+            <div class="showcase-header">
+                <div class="showcase-tag">
+                    <i class="bi bi-fire"></i> Flagship Spotlight
+                </div>
+                <div class="showcase-status">
+                    <i class="bi bi-check-circle-fill"></i> Tersedia
+                </div>
+            </div>
+
+            <div class="showcase-graphic">
+                <svg class="laptop-graphic-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="3" y="4" width="18" height="12" rx="2" stroke="currentColor" fill="rgba(59, 130, 246, 0.08)" />
+                    <line x1="2" y1="20" x2="22" y2="20" stroke="currentColor" stroke-linecap="round" />
+                    <line x1="8" y1="16" x2="16" y2="16" stroke="currentColor" stroke-linecap="round" />
+                    <circle cx="12" cy="10" r="2" fill="currentColor" />
+                </svg>
+            </div>
+
+            <div class="showcase-specs-list">
+                <div class="showcase-spec-chip">
+                    <span class="label"><i class="bi bi-cpu"></i> Processor</span>
+                    <span class="val">Intel Core Ultra / AMD Ryzen AI</span>
+                </div>
+                <div class="showcase-spec-chip">
+                    <span class="label"><i class="bi bi-gpu-card"></i> Graphics</span>
+                    <span class="val">NVIDIA RTX 40-Series</span>
+                </div>
+                <div class="showcase-spec-chip">
+                    <span class="label"><i class="bi bi-display"></i> Display</span>
+                    <span class="val">OLED / 240Hz High Refresh</span>
+                </div>
+            </div>
+
+            <div class="showcase-footer">
+                <div class="showcase-price-tag">
+                    <small>Mulai dari</small>
+                    <strong>Rp 8.000.000+</strong>
+                </div>
+                <a href="/produk/" class="btn-primary-tech" style="padding: 8px 16px; font-size: 13px;">
+                    Lihat Semua <i class="bi bi-arrow-right-short"></i>
+                </a>
+            </div>
         </div>
     </div>
 </div>
 
-<div class="stats">
-    <div class="stat" data-aos="fade-up" data-aos-delay="0"><div class="stat-num">{{ total_produk }}+</div><div class="stat-label">Produk Tersedia</div></div>
-    <div class="stat" data-aos="fade-up" data-aos-delay="80"><div class="stat-num">{{ total_merek }}</div><div class="stat-label">Merek Ternama</div></div>
-    <div class="stat" data-aos="fade-up" data-aos-delay="160"><div class="stat-num">5.000+</div><div class="stat-label">Pelanggan Puas</div></div>
-    <div class="stat" data-aos="fade-up" data-aos-delay="240"><div class="stat-num">24/7</div><div class="stat-label">Dukungan Teknis</div></div>
+<!-- STATS STRIP -->
+<div class="stats-wrapper">
+    <div class="stats-container">
+        <div class="stat-item" data-aos="fade-up" data-aos-delay="0">
+            <div class="stat-icon"><i class="bi bi-laptop"></i></div>
+            <div>
+                <div class="stat-number">{{ total_produk }}+</div>
+                <div class="stat-desc">Varian Laptop Tersedia</div>
+            </div>
+        </div>
+        <div class="stat-item" data-aos="fade-up" data-aos-delay="80">
+            <div class="stat-icon"><i class="bi bi-buildings"></i></div>
+            <div>
+                <div class="stat-number">{{ total_merek }}</div>
+                <div class="stat-desc">Merek Global Resmi</div>
+            </div>
+        </div>
+        <div class="stat-item" data-aos="fade-up" data-aos-delay="160">
+            <div class="stat-icon"><i class="bi bi-people-fill"></i></div>
+            <div>
+                <div class="stat-number">5.000+</div>
+                <div class="stat-desc">Pelanggan Puas</div>
+            </div>
+        </div>
+        <div class="stat-item" data-aos="fade-up" data-aos-delay="240">
+            <div class="stat-icon"><i class="bi bi-headset"></i></div>
+            <div>
+                <div class="stat-number">24/7</div>
+                <div class="stat-desc">Dukungan Teknis Ahli</div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="section">
+<!-- FEATURED PRODUCTS SECTION -->
+<div class="section-wrapper">
     <div class="section-header" data-aos="fade-up">
-        <div class="section-tag">— Pilihan Terbaik</div>
-        <a href="/produk/" class="section-more">Lihat semua →</a>
+        <div>
+            <div class="section-subhead"><i class="bi bi-award-fill"></i> Pilihan Terpopuler</div>
+            <h2 class="section-title">Produk Unggulan</h2>
+        </div>
+        <a href="/produk/" class="section-link">
+            Jelajahi Semua Produk <i class="bi bi-arrow-right"></i>
+        </a>
     </div>
-    <h2 class="section-title" data-aos="fade-up">Produk Unggulan</h2>
-    <div class="filter-bar" data-aos="fade-up">
-        <button class="filter-btn active" onclick="filterProduk(this, 'semua')">Semua</button>
-        <button class="filter-btn" onclick="filterProduk(this, 'gaming')">Gaming</button>
-        <button class="filter-btn" onclick="filterProduk(this, 'bisnis')">Bisnis</button>
-        <button class="filter-btn" onclick="filterProduk(this, 'ultrabook')">Ultrabook</button>
+
+    <!-- Category Filter Tabs -->
+    <div class="filter-tabs" data-aos="fade-up">
+        <button class="filter-btn active" onclick="filterProduk(this, 'semua')">
+            <i class="bi bi-grid-fill"></i> Semua
+        </button>
+        <button class="filter-btn" onclick="filterProduk(this, 'gaming')">
+            <i class="bi bi-controller"></i> Gaming
+        </button>
+        <button class="filter-btn" onclick="filterProduk(this, 'bisnis')">
+            <i class="bi bi-briefcase-fill"></i> Bisnis
+        </button>
+        <button class="filter-btn" onclick="filterProduk(this, 'ultrabook')">
+            <i class="bi bi-feather"></i> Ultrabook
+        </button>
     </div>
-    <div class="products">
+
+    <!-- Products Grid -->
+    <div class="products-grid">
         {% for produk in produk_list %}
-        <a href="/produk/{{ produk.id }}/" class="product-card" data-kategori="{{ produk.kategori.slug }}" data-aos="fade-up" data-aos-delay="{% widthratio forloop.counter0 1 60 %}">
-            {% if produk.kategori %}<div class="product-badge">{{ produk.kategori.nama }}</div>{% endif %}
-            <div class="product-img">
+        <a href="/produk/{{ produk.id }}/" class="product-card" data-kategori="{{ produk.kategori.slug }}" data-aos="fade-up" data-aos-delay="{% widthratio forloop.counter0 1 50 %}">
+            {% if produk.kategori %}
+            <div class="card-badge">{{ produk.kategori.nama }}</div>
+            {% endif %}
+            
+            <div class="product-media">
                 {% if produk.gambar_url %}
-                <img src="{{ produk.gambar_url }}" alt="{{ produk.nama }}" onerror="this.parentElement.innerHTML='<div class=\'product-img-placeholder\'><div class=\'laptop-icon\'><div class=\'laptop-screen\'><div class=\'laptop-screen-inner\'></div></div><div class=\'laptop-base\'></div></div></div>'">
+                <img src="{{ produk.gambar_url }}" alt="{{ produk.nama }}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="placeholder-laptop-box" style="display:none;">
+                    <i class="bi bi-laptop"></i>
+                    <span style="font-size:12px;">Foto Produk</span>
+                </div>
                 {% else %}
-                <div class="product-img-placeholder">
-                    <div class="laptop-icon">
-                        <div class="laptop-screen"><div class="laptop-screen-inner"></div></div>
-                        <div class="laptop-base"></div>
-                    </div>
+                <div class="placeholder-laptop-box">
+                    <i class="bi bi-laptop"></i>
+                    <span style="font-size:12px;">NexusTech Quality</span>
                 </div>
                 {% endif %}
             </div>
-            <div class="product-body">
-                <div class="product-brand">{{ produk.merek.nama }}</div>
-                <div class="product-name">{{ produk.nama }}</div>
-                {% if produk.detail_produk %}
-                <div class="product-specs">{{ produk.detail_produk.prosesor|truncatechars:30 }} · {{ produk.detail_produk.ram }} · {{ produk.detail_produk.storage }}</div>
-                {% else %}
-                <div class="product-specs">{{ produk.deskripsi|truncatechars:60 }}</div>
-                {% endif %}
-                <div class="product-footer">
-                    <div class="product-price">{{ produk.harga_display }}</div>
-                    <button class="btn-add" onclick="event.preventDefault(); tambahKeKeranjang({{ produk.id }}, '{{ produk.nama|escapejs }}', '{{ produk.merek.nama|escapejs }}', {{ produk.harga }}, '{{ produk.gambar_url }}', '{{ produk.sku }}')">+ Keranjang</button>
+
+            <div class="card-content">
+                <div class="card-brand">{{ produk.merek.nama }}</div>
+                <div class="card-title">{{ produk.nama }}</div>
+                
+                <div class="card-specs">
+                    <i class="bi bi-cpu"></i>
+                    {% if produk.detail_produk %}
+                    <span>{{ produk.detail_produk.prosesor|truncatechars:26 }} · {{ produk.detail_produk.ram }}</span>
+                    {% else %}
+                    <span>{{ produk.deskripsi|truncatechars:45 }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="card-footer">
+                    <div class="card-price">{{ produk.harga_display }}</div>
+                    <button class="btn-card-add" onclick="event.preventDefault(); tambahKeKeranjang({{ produk.id }}, '{{ produk.nama|escapejs }}', '{{ produk.merek.nama|escapejs }}', {{ produk.harga }}, '{{ produk.gambar_url }}', '{{ produk.sku }}')" aria-label="Tambah ke keranjang">
+                        <i class="bi bi-cart-plus"></i> + Keranjang
+                    </button>
                 </div>
             </div>
         </a>
         {% empty %}
-        <div style="grid-column:1/-1; text-align:center; padding:60px; color:var(--text-muted);">
-            <div style="font-size:40px; margin-bottom:16px;">🖥️</div>
-            <div style="color:var(--text-secondary);">Belum ada produk. Tambahkan lewat admin panel!</div>
+        <div style="grid-column: 1 / -1; text-align:center; padding: 60px 20px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md);">
+            <i class="bi bi-inbox" style="font-size: 48px; color: var(--text-muted); margin-bottom: 12px; display:inline-block;"></i>
+            <div style="color: var(--text-secondary); font-size: 15px;">Belum ada produk aktif yang tersedia.</div>
         </div>
         {% endfor %}
     </div>
 </div>
 
-<div class="section" style="padding-top:0;">
-    <div class="section-tag" style="margin-bottom:12px;" data-aos="fade-up">— Brand Kami</div>
-    <h2 class="section-title" data-aos="fade-up">Merek Terpercaya</h2>
-    <div class="brands">
+<!-- TRUSTED BRANDS SECTION -->
+<div class="section-wrapper" style="padding-top: 0;">
+    <div class="section-subhead" data-aos="fade-up"><i class="bi bi-shield-check"></i> Mitra Resmi</div>
+    <h2 class="section-title" style="margin-bottom: 24px;" data-aos="fade-up">Merek Terpercaya</h2>
+    
+    <div class="brands-grid">
         {% for merek in merek_list %}
-        <a href="/produk/?merek={{ merek.id }}" class="brand-chip" data-aos="zoom-in" data-aos-delay="{% widthratio forloop.counter0 1 40 %}">{{ merek.nama }}</a>
+        <a href="/produk/?merek={{ merek.id }}" class="brand-card-item" data-aos="zoom-in" data-aos-delay="{% widthratio forloop.counter0 1 30 %}">
+            <i class="bi bi-tag-fill" style="color:var(--accent); font-size: 13px;"></i>
+            {{ merek.nama }}
+        </a>
+        {% empty %}
+        <a href="/produk/" class="brand-card-item">ASUS ROG</a>
+        <a href="/produk/" class="brand-card-item">Lenovo Legion</a>
+        <a href="/produk/" class="brand-card-item">Apple MacBook</a>
+        <a href="/produk/" class="brand-card-item">Dell XPS</a>
+        <a href="/produk/" class="brand-card-item">HP OMEN</a>
+        <a href="/produk/" class="brand-card-item">Acer Predator</a>
+        <a href="/produk/" class="brand-card-item">MSI Gaming</a>
         {% endfor %}
     </div>
 </div>
 
-<div class="features">
-    <div class="feature" data-aos="fade-up" data-aos-delay="0"><div class="feature-icon">⭐</div><div class="feature-title">Garansi Resmi</div><div class="feature-desc">Semua produk bergaransi resmi dari distributor terpercaya Indonesia.</div></div>
-    <div class="feature" data-aos="fade-up" data-aos-delay="120"><div class="feature-icon">🔒</div><div class="feature-title">Pembayaran Aman</div><div class="feature-desc">Transaksi terenkripsi SSL dan dilindungi sistem keamanan berlapis.</div></div>
-    <div class="feature" data-aos="fade-up" data-aos-delay="240"><div class="feature-icon">🚀</div><div class="feature-title">Pengiriman Cepat</div><div class="feature-desc">Estimasi 1–3 hari kerja ke seluruh wilayah Indonesia.</div></div>
+<!-- WHY CHOOSE US / VALUE PROPOSITION -->
+<div class="section-wrapper" style="padding-top: 0;">
+    <div class="section-subhead" data-aos="fade-up"><i class="bi bi-stars"></i> Layanan Unggul</div>
+    <h2 class="section-title" style="margin-bottom: 28px;" data-aos="fade-up">Mengapa Memilih NexusTech?</h2>
+
+    <div class="features-grid">
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="0">
+            <div class="feature-icon-box"><i class="bi bi-shield-check"></i></div>
+            <div class="feature-card-title">Garansi Resmi 100%</div>
+            <div class="feature-card-desc">Jaminan produk 100% orisinal dengan garansi langsung dari authorized distributor Indonesia.</div>
+        </div>
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="80">
+            <div class="feature-icon-box"><i class="bi bi-truck"></i></div>
+            <div class="feature-card-title">Pengiriman Berasuransi</div>
+            <div class="feature-card-desc">Packing kayu & asuransi penuh untuk menjamin laptop tiba dengan aman dan cepat di seluruh Indonesia.</div>
+        </div>
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="160">
+            <div class="feature-icon-box"><i class="bi bi-robot"></i></div>
+            <div class="feature-card-title">Asisten Rekomendasi AI</div>
+            <div class="feature-card-desc">Bingung memilih laptop? Tanyakan langsung kebutuhan & budget Anda ke AI Assistant pintar kami 24/7.</div>
+        </div>
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="240">
+            <div class="feature-icon-box"><i class="bi bi-credit-card-2-front"></i></div>
+            <div class="feature-card-title">Metode Pembayaran Fleksibel</div>
+            <div class="feature-card-desc">Mendukung transfer bank, e-wallet, kartu kredit, hingga cicilan 0% tanpa repot.</div>
+        </div>
+    </div>
 </div>
 
-<div class="notif" id="notif">✅ Ditambahkan ke keranjang!</div>
+<!-- INTERACTIVE CALL TO ACTION -->
+<div class="section-wrapper" style="padding-top: 0;">
+    <div class="cta-banner" data-aos="fade-up">
+        <div>
+            <div class="cta-title">Butuh Rekomendasi Laptop Terbaik?</div>
+            <div class="cta-desc">
+                Konsultasikan kebutuhan spesifikasi software, budget, atau perbandingan seri laptop bersama konsultan AI kami secara gratis sekarang.
+            </div>
+        </div>
+        <div class="cta-actions">
+            <button onclick="cbToggle()" class="btn-primary-tech">
+                <i class="bi bi-chat-dots-fill"></i> Tanya AI Sekarang
+            </button>
+            <a href="/bandingkan/" class="btn-secondary-tech">
+                <i class="bi bi-arrow-left-right"></i> Komparasi Model
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST NOTIFICATION -->
+<div class="toast-notif" id="toastNotif">
+    <i class="bi bi-check-circle-fill"></i>
+    <span id="toastMsg">Berhasil ditambahkan ke keranjang!</span>
+</div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-// ===== 1) Animasi saat website pertama kali dibuka =====
-// Menunggu 1 frame supaya browser sempat "commit" state awal (opacity:0)
-// sebelum class ditambahkan, jadi animasinya benar-benar terlihat berjalan.
-window.addEventListener('DOMContentLoaded', function () {
-    requestAnimationFrame(function () {
-        document.getElementById('heroSection').classList.add('hero-loaded');
-    });
-});
-
-// ===== 2) Animasi hero saat di-scroll ke bawah (parallax) =====
-// Konten hero bergeser ke atas & memudar, blob di belakang bergerak lebih
-// lambat (parallax) supaya terasa berlapis/berkedalaman.
-(function () {
-    const hero = document.getElementById('heroSection');
-    const content = hero ? hero.querySelector('.hero-content') : null;
-    const blob = hero ? hero.querySelector('.hero-blob') : null;
-    let ticking = false;
-
-    function updateHeroParallax() {
-        ticking = false;
-        if (!hero || !content) return;
-        const heroHeight = hero.offsetHeight || 1;
-        const scrolled = Math.min(Math.max(window.scrollY, 0), heroHeight);
-        const progress = scrolled / heroHeight; // 0 -> 1
-
-        content.style.transform = 'translateY(' + (scrolled * 0.35) + 'px)';
-        content.style.opacity = String(Math.max(1 - progress * 1.15, 0));
-
-        if (blob) {
-            blob.style.transform = 'translateY(' + (scrolled * 0.15) + 'px) scale(' + (1 + progress * 0.12) + ')';
-        }
-    }
-
-    window.addEventListener('scroll', function () {
-        if (!ticking) {
-            window.requestAnimationFrame(updateHeroParallax);
-            ticking = true;
-        }
-    }, { passive: true });
-
-    updateHeroParallax();
-})();
-
+// Filter Produk Berdasarkan Kategori
 function filterProduk(btn, kategori) {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
+    
     document.querySelectorAll('.product-card').forEach(card => {
-        card.style.display = (kategori === 'semua' || card.dataset.kategori === kategori) ? 'block' : 'none';
+        if (kategori === 'semua' || card.dataset.kategori === kategori) {
+            card.style.display = 'flex';
+        } else {
+            card.style.display = 'none';
+        }
     });
 }
 
+// Tambah ke Keranjang Belanja
 function tambahKeKeranjang(id, nama, merek, harga, gambar, sku) {
     let keranjang = JSON.parse(localStorage.getItem('keranjang') || '[]');
     const idx = keranjang.findIndex(i => i.id === id);
@@ -245,10 +1083,22 @@ function tambahKeKeranjang(id, nama, merek, harga, gambar, sku) {
         keranjang.push({ id, nama, merek, harga, gambar, sku, qty: 1 });
     }
     localStorage.setItem('keranjang', JSON.stringify(keranjang));
-    const notif = document.getElementById('notif');
-    notif.textContent = '✅ ' + nama + ' ditambahkan!';
-    notif.classList.add('show');
-    setTimeout(() => notif.classList.remove('show'), 2500);
+    
+    if (typeof refreshCartBadge === 'function') {
+        refreshCartBadge();
+    }
+    
+    showToast(nama + ' berhasil ditambahkan ke keranjang!');
+}
+
+function showToast(pesan) {
+    const toast = document.getElementById('toastNotif');
+    const msg = document.getElementById('toastMsg');
+    if (!toast || !msg) return;
+    
+    msg.textContent = pesan;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2800);
 }
 </script>
 {% endblock %}
