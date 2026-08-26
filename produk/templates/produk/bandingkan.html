@@ -183,13 +183,16 @@
         align-items: center;
         justify-content: center;
         overflow: hidden;
-        padding: 10px;
+        padding: 12px;
         border: 1px solid var(--border);
     }
     .cmp-img-box img {
         max-width: 100%;
-        max-height: 140px;
+        max-height: 100%;
+        width: auto;
+        height: auto;
         object-fit: contain;
+        filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.15));
     }
     .cmp-brand {
         font-size: 10px;

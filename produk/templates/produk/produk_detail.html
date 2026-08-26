@@ -11,9 +11,10 @@
 
     .detail { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; padding: 48px 40px; }
 
-    .product-visual { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 320px; position: relative; overflow: hidden; padding: 20px; gap: 16px; }
-    .product-visual img { width: 100%; max-height: 280px; object-fit: contain; }
-    .product-visual-badge { position: absolute; top: 16px; left: 16px; font-size: 10px; padding: 5px 12px; border-radius: 4px; background: var(--gradient-brand); color: #fff; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; }
+    .product-visual { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 380px; position: relative; overflow: hidden; padding: 24px; gap: 16px; box-shadow: var(--shadow-card); }
+    .product-visual img { max-width: 100%; max-height: 300px; width: auto; height: auto; object-fit: contain; filter: drop-shadow(0 8px 24px rgba(0,0,0,0.2)); transition: transform 0.35s ease; }
+    .product-visual:hover img { transform: scale(1.03); }
+    .product-visual-badge { position: absolute; top: 16px; left: 16px; font-size: 11px; padding: 5px 12px; border-radius: var(--radius-full); background: var(--badge-bg); border: 1px solid var(--badge-border); color: var(--badge-text); letter-spacing: 1px; text-transform: uppercase; font-weight: 700; }
     .laptop-big { width: 160px; }
     .laptop-screen-big { width: 160px; height: 100px; background: var(--border); border-radius: 6px 6px 0 0; border: 3px solid var(--border2); display: flex; align-items: center; justify-content: center; }
     .laptop-screen-inner-big { width: 130px; height: 76px; background: var(--screen-bg); border-radius: 2px; }
@@ -122,7 +123,7 @@
     .related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
     .related-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-decoration: none; color: var(--text-primary); transition: all 0.2s; display: block; }
     .related-card:hover { border-color: var(--accent); }
-    .related-img { width: 100%; height: 80px; object-fit: contain; margin-bottom: 10px; }
+    .related-img { width: 100%; height: 90px; object-fit: contain; margin-bottom: 10px; padding: 6px; background: var(--bg-main); border-radius: var(--radius-sm); border: 1px solid var(--border); }
     .related-name { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
     .related-price { font-size: 16px; color: var(--accent); font-weight: 700; }
 

@@ -1,0 +1,26 @@
+{
+    "python.defaultInterpreterPath": "${workspaceFolder}/../toko_laptop/Scripts/python.exe",
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}",
+        "${workspaceFolder}/produk",
+        "${workspaceFolder}/../toko_laptop/Lib/site-packages"
+    ],
+    "python.autoComplete.extraPaths": [
+        "${workspaceFolder}",
+        "${workspaceFolder}/produk",
+        "${workspaceFolder}/../toko_laptop/Lib/site-packages"
+    ],
+    "python.analysis.typeCheckingMode": "off",
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportGeneralTypeIssues": "none",
+        "reportOptionalMemberAccess": "none",
+        "reportAttributeAccessIssue": "none",
+        "reportUndefinedVariable": "none"
+    },
+    "files.associations": {
+        "**/templates/**/*.html": "django-html",
+        "*.html": "django-html"
+    },
+    "html.validate.scripts": false,
+    "html.validate.styles": false
+}
