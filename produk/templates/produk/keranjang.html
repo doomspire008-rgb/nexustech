@@ -338,8 +338,12 @@
     }
 
     @media (max-width: 992px) {
+        .keranjang-wrapper {
+            padding: 24px 18px 48px;
+        }
         .keranjang-content {
             grid-template-columns: 1fr;
+            gap: 24px;
         }
         .ringkasan {
             position: static;
@@ -347,9 +351,17 @@
     }
 
     @media (max-width: 640px) {
+        .page-header-container {
+            padding: 28px 16px 18px;
+        }
+        .keranjang-wrapper {
+            padding: 16px 14px 40px;
+        }
         .item-card {
             flex-direction: column;
             align-items: flex-start;
+            padding: 16px;
+            gap: 14px;
         }
         .item-actions {
             width: 100%;
@@ -359,6 +371,9 @@
             border-top: 1px solid var(--border);
             padding-top: 12px;
             margin-top: 8px;
+        }
+        .ringkasan {
+            padding: 20px 16px;
         }
     }
 </style>

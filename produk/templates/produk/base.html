@@ -748,28 +748,38 @@
         /* ===== RESPONSIVENESS (MOBILE & TABLET) ===== */
         @media (max-width: 992px) {
             .nav-menu {
-                display: none;
+                display: none !important;
             }
             .mobile-toggle {
-                display: inline-flex;
+                display: inline-flex !important;
             }
             .footer-inner {
                 grid-template-columns: 1fr 1fr;
+                gap: 36px;
+            }
+            .footer-inner > div:first-child {
+                grid-column: 1 / -1;
             }
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
             .navbar {
-                padding: 12px 16px;
+                padding: 12px 18px;
             }
-            .nav-brand .brand-text {
-                font-size: 18px;
+            .brand-text {
+                font-size: 20px;
             }
-            .btn-cart-nav span.cart-text {
-                display: none;
+            .mobile-menu {
+                padding: 16px 20px;
             }
-            .btn-cart-nav {
-                padding: 8px 12px;
+            .mobile-menu .nav-link {
+                padding: 12px 14px;
+                font-size: 14px;
+                border-radius: var(--radius-sm);
+            }
+            .mobile-menu .nav-link:hover, .mobile-menu .nav-link.active {
+                background: var(--badge-bg);
+                color: var(--accent);
             }
             .footer-inner {
                 grid-template-columns: 1fr;
@@ -778,19 +788,58 @@
             .footer-bottom {
                 flex-direction: column;
                 align-items: flex-start;
+                gap: 12px;
+            }
+            #chatbot-panel {
+                bottom: 86px;
+                right: 16px;
+                left: 16px;
+                width: auto;
+                max-width: none;
+                height: 480px;
+                max-height: calc(100vh - 110px);
+                border-radius: var(--radius-md);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .navbar {
+                padding: 10px 14px;
+            }
+            .brand-text {
+                font-size: 17px;
+                letter-spacing: 1px;
+            }
+            .btn-cart-nav {
+                padding: 7px 10px;
+                gap: 6px;
+            }
+            .btn-cart-nav span.cart-text {
+                display: none;
+            }
+            .theme-toggle-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 15px;
+            }
+            .mobile-toggle {
+                width: 36px;
+                height: 36px;
+                font-size: 18px;
             }
             #chatbot-toggle {
-                bottom: 20px;
-                right: 20px;
+                bottom: 18px;
+                right: 18px;
                 width: 48px;
                 height: 48px;
                 font-size: 20px;
             }
-            #chatbot-panel {
-                bottom: 80px;
-                right: 16px;
-                width: calc(100vw - 32px);
-                height: calc(100vh - 120px);
+            .messages-container {
+                padding: 0 14px;
+            }
+            .alert-box {
+                font-size: 13px;
+                padding: 10px 14px;
             }
         }
     </style>
