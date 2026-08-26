@@ -17,10 +17,16 @@ def format_rupiah(value):
 def beranda(request):
     produk_list = Produk.objects.filter(status='aktif').select_related('merek', 'kategori')[:6]
     merek_list = Merek.objects.all()
+    flagship_produk = Produk.objects.filter(status='aktif').order_by('-harga').select_related('merek', 'kategori').first()
+    
     for p in produk_list:
         p.harga_display = format_rupiah(p.harga)
+    if flagship_produk:
+        flagship_produk.harga_display = format_rupiah(flagship_produk.harga)
+        
     context = {
         'produk_list': produk_list,
+        'flagship_produk': flagship_produk,
         'merek_list': merek_list,
         'total_produk': Produk.objects.filter(status='aktif').count(),
         'total_merek': Merek.objects.count(),

@@ -181,7 +181,7 @@
 
     .showcase-graphic {
         width: 100%;
-        height: 200px;
+        height: 210px;
         background: var(--bg-card);
         border-radius: var(--radius-md);
         display: flex;
@@ -191,6 +191,19 @@
         margin-bottom: 20px;
         position: relative;
         border: 1px solid var(--border);
+        overflow: hidden;
+    }
+
+    .showcase-graphic img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        padding: 12px;
+        transition: transform 0.35s ease;
+    }
+
+    .showcase-card:hover .showcase-graphic img {
+        transform: scale(1.06);
     }
 
     .laptop-graphic-svg {
@@ -822,42 +835,58 @@
                     <i class="bi bi-fire"></i> Flagship Spotlight
                 </div>
                 <div class="showcase-status">
-                    <i class="bi bi-check-circle-fill"></i> Tersedia
+                    <i class="bi bi-check-circle-fill"></i> {% if flagship_produk %}{{ flagship_produk.get_status_display }}{% else %}Tersedia{% endif %}
                 </div>
             </div>
 
             <div class="showcase-graphic">
+                {% if flagship_produk and flagship_produk.gambar_url %}
+                <img src="{{ flagship_produk.gambar_url }}" alt="{{ flagship_produk.nama }}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <svg class="laptop-graphic-svg" style="display:none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="3" y="4" width="18" height="12" rx="2" stroke="currentColor" fill="rgba(59, 130, 246, 0.08)" />
+                    <line x1="2" y1="20" x2="22" y2="20" stroke="currentColor" stroke-linecap="round" />
+                    <line x1="8" y1="16" x2="16" y2="16" stroke="currentColor" stroke-linecap="round" />
+                    <circle cx="12" cy="10" r="2" fill="currentColor" />
+                </svg>
+                {% else %}
                 <svg class="laptop-graphic-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                     <rect x="3" y="4" width="18" height="12" rx="2" stroke="currentColor" fill="rgba(59, 130, 246, 0.08)" />
                     <line x1="2" y1="20" x2="22" y2="20" stroke="currentColor" stroke-linecap="round" />
                     <line x1="8" y1="16" x2="16" y2="16" stroke="currentColor" stroke-linecap="round" />
                     <circle cx="12" cy="10" r="2" fill="currentColor" />
                 </svg>
+                {% endif %}
             </div>
 
             <div class="showcase-specs-list">
                 <div class="showcase-spec-chip">
-                    <span class="label"><i class="bi bi-cpu"></i> Processor</span>
-                    <span class="val">Intel Core Ultra / AMD Ryzen AI</span>
+                    <span class="label"><i class="bi bi-laptop"></i> Model</span>
+                    <span class="val">{% if flagship_produk %}{{ flagship_produk.nama }}{% else %}Laptop Flagship 2026{% endif %}</span>
                 </div>
                 <div class="showcase-spec-chip">
-                    <span class="label"><i class="bi bi-gpu-card"></i> Graphics</span>
-                    <span class="val">NVIDIA RTX 40-Series</span>
+                    <span class="label"><i class="bi bi-award"></i> Brand & Kategori</span>
+                    <span class="val">{% if flagship_produk %}{{ flagship_produk.merek.nama }} · {{ flagship_produk.kategori.nama }}{% else %}Official Partner{% endif %}</span>
                 </div>
                 <div class="showcase-spec-chip">
-                    <span class="label"><i class="bi bi-display"></i> Display</span>
-                    <span class="val">OLED / 240Hz High Refresh</span>
+                    <span class="label"><i class="bi bi-shield-check"></i> Jaminan</span>
+                    <span class="val">Garansi Resmi Distributor</span>
                 </div>
             </div>
 
             <div class="showcase-footer">
                 <div class="showcase-price-tag">
-                    <small>Mulai dari</small>
-                    <strong>Rp 8.000.000+</strong>
+                    <small>Harga Resmi</small>
+                    <strong>{% if flagship_produk %}{{ flagship_produk.harga_display }}{% else %}Rp 8.000.000+{% endif %}</strong>
                 </div>
+                {% if flagship_produk %}
+                <a href="/produk/{{ flagship_produk.id }}/" class="btn-primary-tech" style="padding: 8px 16px; font-size: 13px;">
+                    Lihat Detail <i class="bi bi-arrow-right-short"></i>
+                </a>
+                {% else %}
                 <a href="/produk/" class="btn-primary-tech" style="padding: 8px 16px; font-size: 13px;">
                     Lihat Semua <i class="bi bi-arrow-right-short"></i>
                 </a>
+                {% endif %}
             </div>
         </div>
     </div>
