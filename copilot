@@ -1,0 +1,59 @@
+[33mcommit c3b55e15e2fed25d54e188d6434a80fb99973916[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Delvin <doomspire008@gmail.com>
+Date:   Wed Nov 18 15:18:15 2026 +0700
+
+    refactor: extract landing page CSS and JS
+
+[33mcommit 1b4674084bc26dd08cc8f6d2f4a5fad19f74137a[m
+Author: Delvin <doomspire008@gmail.com>
+Date:   Wed Nov 18 15:10:18 2026 +0700
+
+    refactor: extract landing page CSS and JS
+
+[33mcommit 8f1336f25568367ab58c0d955286eb204d6bdda5[m
+Author: Delvin <doomspire008@gmail.com>
+Date:   Wed Aug 26 15:55:11 2026 +0700
+
+    feat: enhance mobile and tablet responsiveness across base, catalog, compare, and cart
+
+[33mcommit af7d7efbf8f7386b97c05ee54441b37b7228c9d7[m
+Author: Delvin <doomspire008@gmail.com>
+Date:   Wed Aug 26 15:43:56 2026 +0700
+
+    style: harmonize Iris Violet & Obsidian design system across detail, compare, and cart pages
+
+[33mcommit 4c0fcf63f72878279f31d24e4f5b11ebf0a1874b[m
+Author: Delvin <doomspire008@gmail.com>
+Date:   Wed Aug 26 15:11:12 2026 +0700
+
+    style: elevate color system with elegant Iris Violet and Obsidian Pantone harmony
+
+[33mcommit 51e79242a444b401d896e1716866ba81cfa43417[m
+Author: Delvin <doomspire008@gmail.com>
+Date:   Wed Aug 26 14:58:55 2026 +0700
+
+    style: remove generic logo icon and adopt clean typographic branding
+
+[33mcommit 7d2d588bd57b0a303839b3f29648b42602beac90[m
+Author: Delvin <doomspire008@gmail.com>
+Date:   Wed Aug 26 14:49:38 2026 +0700
+
+    style: optimize precision and consistent aspect ratios for all product images
+
+[33mcommit f3199801e167d04cb6de971f45d6be4fbe68bfb1[m
+Author: Delvin <doomspire008@gmail.com>
+Date:   Wed Aug 26 14:40:41 2026 +0700
+
+    feat: make flagship hero card dynamic from database products
+
+[33mcommit b9c843669192fb8561df672901294253ca7d0460[m
+Author: Delvin <doomspire008@gmail.com>
+Date:   Wed Aug 26 13:53:48 2026 +0700
+
+    feat: redesign landing page and modern design system with responsive layout and vector icons
+
+[33mcommit 058727f3bffb1c6fc0bf97eb66624849705f6a38[m
+Author: Delvin <doomspire008@gmail.com>
+Date:   Wed Aug 26 12:26:35 2026 +0700
+
+    Fix InvalidStorageError, 404 admin, and implement product comparison page
